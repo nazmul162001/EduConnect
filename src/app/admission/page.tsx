@@ -1,4 +1,5 @@
 "use client";
+import { Protected } from "@/components/auth/Protected";
 import { FadeIn, SlideUp } from "@/components/motion/MotionPrimitives";
 import { useAuth } from "@/hooks/useAuth";
 import { getColleges } from "@/lib/data";
@@ -312,10 +313,12 @@ function InnerAdmission() {
 
 export default function AdmissionPage() {
   return (
-    <Suspense
-      fallback={<div className="container-responsive py-10">Loading...</div>}
-    >
-      <InnerAdmission />
-    </Suspense>
+    <Protected>
+      <Suspense
+        fallback={<div className="container-responsive py-10">Loading...</div>}
+      >
+        <InnerAdmission />
+      </Suspense>
+    </Protected>
   );
 }
