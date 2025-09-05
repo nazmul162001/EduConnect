@@ -4,6 +4,7 @@ import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { Github, Lock, Mail } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -49,8 +50,9 @@ export function LoginForm() {
       const result = await login(formData).unwrap();
       dispatch(setUser(result.user));
       router.push("/");
-    } catch (err: any) {
-      setError(err.data?.error || "Login failed");
+    } catch (err: unknown) {
+      const error = err as { data?: { error?: string } };
+      setError(error.data?.error || "Login failed");
     }
   };
 
@@ -59,6 +61,39 @@ export function LoginForm() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const handleGoogleSignIn = async () => {
+    console.log("Google button clicked!");
+    setError(""); // Clear any previous errors
+
+    try {
+      console.log("Starting Google sign in...");
+
+      // Use NextAuth signIn with redirect: false to prevent page reload
+      const result = await signIn("google", {
+        callbackUrl: "/",
+        redirect: false,
+      });
+
+      console.log("Google sign in result:", result);
+
+      if (result?.error) {
+        console.error("Google sign in error:", result.error);
+        setError(`Google sign in failed: ${result.error}`);
+      } else if (result?.ok) {
+        console.log("Google sign in successful");
+        // The session will be updated automatically
+      } else if (result?.url) {
+        // If we get a URL, it means we need to redirect to Google
+        console.log("Redirecting to Google OAuth:", result.url);
+        // Open in the same window but without page reload
+        window.location.href = result.url;
+      }
+    } catch (error) {
+      console.error("Google sign in error:", error);
+      setError("Failed to sign in with Google");
+    }
   };
 
   return (
@@ -141,7 +176,10 @@ export function LoginForm() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors">
+            <button
+              onClick={handleGoogleSignIn}
+              className="flex items-center justify-center px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors"
+            >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"

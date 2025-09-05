@@ -5,6 +5,7 @@ import {
   setUser,
 } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useRef } from "react";
 
 export function useAuth() {
@@ -12,6 +13,7 @@ export function useAuth() {
   const { user, isAuthenticated, isLoading } = useAppSelector(
     (state) => state.root.auth
   );
+  const { data: session, status: sessionStatus } = useSession();
   const hasInitialized = useRef(false);
 
   const {
@@ -21,6 +23,24 @@ export function useAuth() {
   } = useGetCurrentUserQuery(undefined, {
     skip: false, // Always try to get current user
   });
+
+  // Handle NextAuth session
+  useEffect(() => {
+    if (session?.user && !isAuthenticated) {
+      // Update Redux state with NextAuth user data
+      dispatch(
+        setUser({
+          id: session.user.id || "",
+          name: session.user.name || "",
+          email: session.user.email || "",
+          role:
+            (session.user.role as "STUDENT" | "ADMIN" | "COLLEGE_ADMIN") ||
+            "STUDENT",
+          avatar: session.user.image || undefined,
+        })
+      );
+    }
+  }, [session, dispatch, isAuthenticated]);
 
   useEffect(() => {
     if (data?.user) {
@@ -33,9 +53,33 @@ export function useAuth() {
     dispatch(setLoading(queryLoading));
   }, [data, error, queryLoading, dispatch]);
 
+  // Handle when Redux auth is cleared - also clear NextAuth session
+  useEffect(() => {
+    if (!isAuthenticated && session?.user) {
+      console.log("Redux auth cleared, signing out from NextAuth...");
+      signOut({ redirect: false });
+    }
+  }, [isAuthenticated, session]);
+
+  // Return combined authentication state
+  const isAuthLoading = isLoading || sessionStatus === "loading";
+  const isUserAuthenticated = isAuthenticated || !!session?.user;
+
   return {
-    user,
-    isAuthenticated,
-    isLoading,
+    user:
+      user ||
+      (session?.user
+        ? {
+            id: session.user.id || "",
+            name: session.user.name || "",
+            email: session.user.email || "",
+            role:
+              (session.user.role as "STUDENT" | "ADMIN" | "COLLEGE_ADMIN") ||
+              "STUDENT",
+            avatar: session.user.image || undefined,
+          }
+        : null),
+    isAuthenticated: isUserAuthenticated,
+    isLoading: isAuthLoading,
   };
 }

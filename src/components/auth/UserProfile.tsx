@@ -4,6 +4,7 @@ import { useLogoutMutation } from "@/redux/features/auth/authApi";
 import { clearAuth } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { LogOut, User } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,21 +42,38 @@ export function UserProfile() {
 
   const handleLogout = async () => {
     try {
-      // Clear auth state first
-      dispatch(clearAuth());
+      console.log("Starting logout process...");
       setIsDropdownOpen(false);
 
-      // Then call logout API
-      await logout().unwrap();
+      // Sign out from NextAuth first
+      await signOut({
+        redirect: false,
+        callbackUrl: "/login",
+      });
+
+      // Call Redux logout API (this will clear Redux state automatically)
+      try {
+        await logout().unwrap();
+      } catch (reduxError) {
+        console.log(
+          "Redux logout failed (user might be Google OAuth):",
+          reduxError
+        );
+        // For Google OAuth users, manually clear Redux state
+        dispatch(clearAuth());
+      }
+
+      console.log("Logout completed successfully");
+
+      // Navigate to login page using Next.js router (no page reload)
+      router.push("/login");
     } catch (error) {
       console.error("Logout failed:", error);
-      // Even if API call fails, we still want to clear local state
+      // Even if everything fails, we still want to clear local state
       dispatch(clearAuth());
       setIsDropdownOpen(false);
+      router.push("/login");
     }
-
-    // Navigate to login page using Next.js router (no page reload)
-    router.push("/login");
   };
 
   return (
