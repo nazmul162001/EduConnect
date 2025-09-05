@@ -1,6 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/context/AuthContext";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { UserProfile } from "@/components/auth/UserProfile";
+import { useAuth } from "@/hooks/useAuth";
 import { GraduationCap, LogIn, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,7 +16,7 @@ const navItems = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -46,18 +47,8 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          {user ? (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/profile"
-                className="text-sm font-semibold hover:underline"
-              >
-                {user.name}
-              </Link>
-              <Button variant="outline" onClick={logout}>
-                Logout
-              </Button>
-            </div>
+          {isAuthenticated ? (
+            <UserProfile />
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/login" className="btn-hero inline-flex items-center">
@@ -95,7 +86,7 @@ export function Navbar() {
                 </span>
               </Link>
             ))}
-            {user ? (
+            {isAuthenticated && user ? (
               <div className="flex items-center gap-3">
                 <Link
                   href="/profile"
@@ -104,15 +95,7 @@ export function Navbar() {
                 >
                   {user.name}
                 </Link>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    logout();
-                    setOpen(false);
-                  }}
-                >
-                  Logout
-                </Button>
+                <LogoutButton />
               </div>
             ) : (
               <div className="flex items-center gap-2">
