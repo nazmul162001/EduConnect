@@ -1,9 +1,20 @@
-import AdmissionDemo from "@/components/AdmissionDemo";
-
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <AdmissionDemo />
-    </div>
+    <div
+      className="min-h-screen"
+      style={{
+        background: `radial-gradient(
+        1200px 600px at 10% 10%,
+        rgba(99, 102, 241, 0.15),
+        transparent
+      ),
+      radial-gradient(
+        1000px 600px at 90% 20%,
+        rgba(6, 182, 212, 0.15),
+        transparent
+      ),
+      var(--background)`,
+      }}
+    ></div>
   );
 }
