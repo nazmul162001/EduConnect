@@ -4,12 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
-  const isProtected = [
-    "/colleges/",
-    "/my-college",
-    "/profile",
-    "/admission",
-  ].some((p) => url.pathname.startsWith(p));
+  const isProtected = ["/colleges/", "/my-college", "/admission"].some((p) =>
+    url.pathname.startsWith(p)
+  );
 
   if (!isProtected) return NextResponse.next();
 
@@ -46,5 +43,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/my-college", "/profile"],
+  matcher: ["/my-college"],
 };
