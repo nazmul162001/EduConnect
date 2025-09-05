@@ -43,8 +43,11 @@ export type Review = {
   collegeId: string;
   userId: string;
   userName: string;
+  firstName?: string;
+  lastName?: string;
   rating: number; // 1-5
   comment: string;
+  university?: string;
   createdAt: string;
 };
 

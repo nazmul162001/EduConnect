@@ -1,20 +1,50 @@
 [
   {
     "id": "rv-1",
-    "collegeId": "c-oxford",
+    "collegeId": "c-yale",
     "userId": "seed",
-    "userName": "Ayesha",
+    "userName": "David Rodriguez",
+    "firstName": "David",
+    "lastName": "Rodriguez",
     "rating": 5,
-    "comment": "Amazing campus and supportive faculty!",
-    "createdAt": "2025-01-12T09:12:00.000Z"
+    "comment": "Yale provided me with incredible opportunities in liberal arts education. The professors are approachable and the community is welcoming.",
+    "university": "Yale University",
+    "createdAt": "2024-02-12T09:12:00.000Z"
   },
   {
     "id": "rv-2",
+    "collegeId": "c-stanford",
+    "userId": "seed",
+    "userName": "Michael Chen",
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "rating": 5,
+    "comment": "Amazing experience at Stanford! The entrepreneurial spirit and innovation culture here is incredible. Highly recommend to anyone interested in tech.",
+    "university": "Stanford University",
+    "createdAt": "2024-02-05T14:30:00.000Z"
+  },
+  {
+    "id": "rv-3",
+    "collegeId": "c-mit",
+    "userId": "seed",
+    "userName": "Sarah Williams",
+    "firstName": "Sarah",
+    "lastName": "Williams",
+    "rating": 4,
+    "comment": "Challenging but rewarding academic experience. The engineering programs are top-notch and the collaborative environment is fantastic.",
+    "university": "MIT",
+    "createdAt": "2024-01-30T11:45:00.000Z"
+  },
+  {
+    "id": "rv-4",
     "collegeId": "c-harvard",
     "userId": "seed",
-    "userName": "Carlos",
-    "rating": 4,
-    "comment": "Great research opportunities and career services.",
-    "createdAt": "2025-02-22T14:30:00.000Z"
+    "userName": "Alice Johnson",
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "rating": 5,
+    "comment": "Exceptional academic environment with world-class faculty. The research opportunities are unparalleled and the campus culture is inspiring.",
+    "university": "Harvard University",
+    "createdAt": "2024-01-20T16:20:00.000Z"
   }
 ]
