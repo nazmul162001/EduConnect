@@ -1,0 +1,107 @@
+"use client";
+import { useAuth } from "@/context/AuthContext";
+import { motion } from "framer-motion";
+import { Lock, Mail, User } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export default function RegisterPage() {
+  const { register: signup } = useAuth();
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    await signup(name, email, password);
+    router.push("/");
+  };
+
+  return (
+    <div
+      className="min-h-screen py-12"
+      style={{
+        background: `radial-gradient(1200px 600px at 10% 10%, rgba(99, 102, 241, 0.15), transparent), radial-gradient(1000px 600px at 90% 20%, rgba(6, 182, 212, 0.15), transparent), var(--background)`,
+      }}
+    >
+      <div className="container-responsive">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md mx-auto bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8"
+        >
+          <h1 className="text-2xl font-bold text-white">Create an account</h1>
+          <form onSubmit={onSubmit} className="mt-6 grid gap-4">
+            <div>
+              <label className="block text-white font-semibold mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-300" />
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                  placeholder="Enter your full name"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-white font-semibold mb-2">
+                Email
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-300" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                  placeholder="Enter your email"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-white font-semibold mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-300" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                  placeholder="Create a password"
+                />
+              </div>
+            </div>
+            <button
+              disabled={loading}
+              type="submit"
+              className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Creating account..." : "Sign up"}
+            </button>
+          </form>
+          <p className="mt-2 text-sm text-blue-200">
+            Already have an account?{" "}
+            <Link
+              className="text-white hover:underline font-medium"
+              href="/login"
+            >
+              Login
+            </Link>
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

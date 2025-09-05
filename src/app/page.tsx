@@ -1,3 +1,16 @@
+import { Hero } from "@/components/home/Hero";
+import {
+  CallToAction,
+  FeaturedColleges,
+  Gallery,
+  KeyFeatures,
+  ResearchLinks,
+  Reviews,
+  Statistics,
+  SuccessStories,
+} from "@/components/home/Sections";
+import { SlideUp } from "@/components/motion/MotionPrimitives";
+
 export default function Home() {
   return (
     <div
@@ -15,6 +28,20 @@ export default function Home() {
       ),
       var(--background)`,
       }}
-    ></div>
+    >
+      <Hero />
+      <div id="featured">
+        <SlideUp>
+          <FeaturedColleges />
+        </SlideUp>
+      </div>
+      <Statistics />
+      <KeyFeatures />
+      <Gallery />
+      <ResearchLinks />
+      <SuccessStories />
+      <Reviews />
+      <CallToAction />
+    </div>
   );
 }
