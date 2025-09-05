@@ -1,9 +1,9 @@
 "use client";
-// import { useAuth } from "@/context/AuthContext"; // Will be used when implementing actual API call
 import { motion } from "framer-motion";
-import { CheckCircle, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function ResetPage() {
   // const { resetPassword } = useAuth(); // Will be used when implementing actual API call
@@ -20,12 +20,36 @@ export default function ResetPage() {
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
     if (!email) {
       setError("Please enter your email address");
       return;
     }
-    // Move to next step
-    setStep(2);
+
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          step: 1,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Failed to verify email");
+        return;
+      }
+
+      // Email verified successfully, move to next step
+      setStep(2);
+    } catch {
+      setError("Network error. Please try again.");
+    }
   };
 
   const handlePasswordReset = async (e: React.FormEvent) => {
@@ -48,11 +72,47 @@ export default function ResetPage() {
     }
 
     try {
-      // Here you would implement the actual password reset logic
-      // For now, we'll just show success
-      setStep(3);
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          oldPassword,
+          newPassword,
+          step: 2,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Failed to reset password");
+        return;
+      }
+
+      // Password reset successful, show SweetAlert2 success message
+      await Swal.fire({
+        title: "Password Reset Successful!",
+        text: "Your password has been updated successfully. You can now login with your new password.",
+        icon: "success",
+        confirmButtonColor: "#4f46e5",
+        confirmButtonText: "Go to Login",
+        customClass: {
+          popup: "swal2-popup-custom",
+          title: "swal2-title-custom",
+          htmlContainer: "swal2-content-custom",
+          confirmButton: "swal2-confirm-custom",
+        },
+        background: "#1e293b",
+        color: "#f1f5f9",
+      }).then(() => {
+        // Redirect to login page
+        window.location.href = "/login";
+      });
     } catch {
-      setError("Failed to reset password. Please try again.");
+      setError("Network error. Please try again.");
     }
   };
 
@@ -207,26 +267,6 @@ export default function ResetPage() {
           </form>
         )}
 
-        {step === 3 && (
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-4">
-              <CheckCircle className="w-8 h-8 text-green-400" />
-            </div>
-            <p className="text-green-400 font-medium mb-2">
-              Password reset successfully!
-            </p>
-            <p className="text-blue-200 text-sm mb-4">
-              Your password has been updated. You can now login with your new
-              password.
-            </p>
-            <Link
-              href="/login"
-              className="inline-block bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-            >
-              Go to Login
-            </Link>
-          </div>
-        )}
         {step === 1 && (
           <p className="mt-4 text-sm text-blue-200">
             Remember your password?{" "}
