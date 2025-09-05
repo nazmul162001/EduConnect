@@ -19,7 +19,8 @@ export type SportsCategory = {
 };
 
 export type College = {
-  id: string;
+  _id?: string;
+  id?: string;
   name: string;
   image: string;
   rating: number;
@@ -30,6 +31,11 @@ export type College = {
   researchPapers: ResearchPaper[];
   sports: SportsCategory[];
   graduatesGallery: string[];
+  description?: string;
+  location?: string;
+  website?: string;
+  email?: string;
+  phone?: string;
 };
 
 export type Review = {
