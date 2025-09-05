@@ -11,6 +11,10 @@ export type ResearchPaper = {
   url: string;
   authors: string[];
   year: number;
+  category?: string;
+  institution?: string;
+  abstract?: string;
+  downloads?: number;
 };
 
 export type SportsCategory = {
@@ -39,7 +43,8 @@ export type College = {
 };
 
 export type Review = {
-  id: string;
+  _id?: string;
+  id?: string;
   collegeId: string;
   userId: string;
   userName: string;

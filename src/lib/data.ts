@@ -3,7 +3,7 @@ import gallery from "@/data/gallery.json";
 import research from "@/data/research.json";
 import seedReviews from "@/data/reviews.json";
 import { loadFromStorage, saveToStorage, storageKeys } from "@/lib/storage";
-import { College, Review } from "@/types";
+import { College, ResearchPaper, Review } from "@/types";
 
 export function getColleges(): College[] {
   return colleges as unknown as College[];
@@ -24,13 +24,7 @@ export function getGallery(): string[] {
 }
 
 export function getResearchLinks() {
-  return research as unknown as {
-    id: string;
-    title: string;
-    url: string;
-    authors: string[];
-    year: number;
-  }[];
+  return research as unknown as ResearchPaper[];
 }
 
 export function getReviews(): Review[] {

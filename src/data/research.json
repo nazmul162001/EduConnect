@@ -1,23 +1,101 @@
 [
   {
     "id": "p-101",
-    "title": "Green Computing at Scale",
-    "url": "https://example.com/green-computing",
-    "authors": ["Z. Rao", "M. Khan"],
-    "year": 2024
+    "title": "Quantum Computing Applications in Cryptography",
+    "url": "https://dspace.mit.edu/handle/1721.1/123456",
+    "authors": ["Dr. Sarah Chen", "Prof. Michael Rodriguez"],
+    "year": 2024,
+    "category": "Computer Science",
+    "institution": "MIT",
+    "abstract": "This research explores the revolutionary potential of quantum computing in modern cryptographic systems and security protocols.",
+    "downloads": 1234
   },
   {
     "id": "p-102",
-    "title": "AI for Healthcare",
-    "url": "https://example.com/ai-healthcare",
-    "authors": ["L. Tran"],
-    "year": 2023
+    "title": "Green Computing at Scale",
+    "url": "https://dspace.mit.edu/handle/1721.1/123457",
+    "authors": ["Z. Rao", "M. Khan"],
+    "year": 2024,
+    "category": "Computer Science",
+    "institution": "MIT",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 856
   },
   {
     "id": "p-103",
+    "title": "AI for Healthcare",
+    "url": "https://dspace.mit.edu/handle/1721.1/123458",
+    "authors": ["L. Tran"],
+    "year": 2023,
+    "category": "Computer Science",
+    "institution": "MIT",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 2103
+  },
+  {
+    "id": "p-104",
     "title": "Ocean Microplastics Mapping",
-    "url": "https://example.com/ocean-mapping",
+    "url": "https://dspace.mit.edu/handle/1721.1/123459",
     "authors": ["S. Ahmed", "T. Ito"],
-    "year": 2022
+    "year": 2022,
+    "category": "Computer Science",
+    "institution": "MIT",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 567
+  },
+  {
+    "id": "p-105",
+    "title": "Machine Learning in Climate Prediction",
+    "url": "https://dspace.mit.edu/handle/1721.1/123460",
+    "authors": ["Dr. Emily Watson", "Prof. James Liu"],
+    "year": 2024,
+    "category": "Computer Science",
+    "institution": "MIT",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 1892
+  },
+  {
+    "id": "p-106",
+    "title": "Blockchain for Supply Chain Transparency",
+    "url": "https://dspace.mit.edu/handle/1721.1/123461",
+    "authors": ["A. Kumar", "R. Patel"],
+    "year": 2023,
+    "category": "Computer Science",
+    "institution": "MIT",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 743
+  },
+  {
+    "id": "p-107",
+    "title": "Neural Networks for Medical Diagnosis",
+    "url": "https://arxiv.org/abs/2024.12345",
+    "authors": ["Dr. Maria Garcia", "Prof. David Kim"],
+    "year": 2024,
+    "category": "Computer Science",
+    "institution": "Stanford",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 1456
+  },
+  {
+    "id": "p-108",
+    "title": "Sustainable Energy Solutions",
+    "url": "https://www.nature.com/articles/s41586-024-12345-6",
+    "authors": ["Dr. John Smith", "Dr. Lisa Wang"],
+    "year": 2023,
+    "category": "Engineering",
+    "institution": "Harvard",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 892
+  },
+  {
+    "id": "p-109",
+    "title": "Data Privacy in IoT Systems",
+    "url": "https://ieeexplore.ieee.org/document/12345678",
+    "authors": ["Dr. Ahmed Hassan", "Prof. Sarah Johnson"],
+    "year": 2024,
+    "category": "Computer Science",
+    "institution": "Berkeley",
+    "abstract": "This research explores innovative approaches and methodologies in the field of computer science, contributing to the advancement of knowledge and technology.",
+    "downloads": 1123
   }
 ]
