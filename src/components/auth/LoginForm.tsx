@@ -174,7 +174,7 @@ export function LoginForm() {
             href="/reset"
             className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
           >
-            Forgot password? Reset
+            Reset your password
           </Link>
           <div className="text-sm text-gray-400">
             New here?{" "}

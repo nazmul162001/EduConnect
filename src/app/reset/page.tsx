@@ -16,6 +16,8 @@ export default function ResetPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,8 @@ export default function ResetPage() {
       setError("Please enter your email address");
       return;
     }
+
+    setIsEmailLoading(true);
 
     try {
       const response = await fetch("/api/auth/reset-password", {
@@ -49,6 +53,8 @@ export default function ResetPage() {
       setStep(2);
     } catch {
       setError("Network error. Please try again.");
+    } finally {
+      setIsEmailLoading(false);
     }
   };
 
@@ -70,6 +76,8 @@ export default function ResetPage() {
       setError("New password must be at least 6 characters long");
       return;
     }
+
+    setIsPasswordLoading(true);
 
     try {
       const response = await fetch("/api/auth/reset-password", {
@@ -113,6 +121,8 @@ export default function ResetPage() {
       });
     } catch {
       setError("Network error. Please try again.");
+    } finally {
+      setIsPasswordLoading(false);
     }
   };
 
@@ -156,9 +166,10 @@ export default function ResetPage() {
             </div>
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              disabled={isEmailLoading}
+              className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              Continue
+              {isEmailLoading ? "Checking Email..." : "Continue"}
             </button>
           </form>
         )}
@@ -253,15 +264,17 @@ export default function ResetPage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="flex-1 bg-gray-500/20 hover:bg-gray-500/30 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300"
+                disabled={isPasswordLoading}
+                className="flex-1 bg-gray-500/20 hover:bg-gray-500/30 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Back
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                disabled={isPasswordLoading}
+                className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                Reset Password
+                {isPasswordLoading ? "Resetting..." : "Reset Password"}
               </button>
             </div>
           </form>
