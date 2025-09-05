@@ -96,6 +96,41 @@ export function LoginForm() {
     }
   };
 
+  const handleGitHubSignIn = async () => {
+    console.log("GitHub button clicked!");
+    setError(""); // Clear any previous errors
+
+    try {
+      console.log("Starting GitHub sign in...");
+
+      // Use NextAuth signIn with redirect: false to prevent page reload
+      const result = await signIn("github", {
+        callbackUrl: "/",
+        redirect: false,
+      });
+
+      console.log("GitHub sign in result:", result);
+
+      if (result?.error) {
+        console.error("GitHub sign in error:", result.error);
+        setError(`GitHub sign in failed: ${result.error}`);
+      } else if (result?.ok) {
+        console.log("GitHub sign in successful");
+        // The session will be updated automatically
+      } else if (result?.url) {
+        // If we get a URL, it means we need to redirect to GitHub
+        console.log("Redirecting to GitHub OAuth:", result.url);
+        // Open in the same window but without page reload
+        window.location.href = result.url;
+      } else {
+        console.log("Unexpected result:", result);
+      }
+    } catch (error) {
+      console.error("GitHub sign in error:", error);
+      setError("Failed to sign in with GitHub");
+    }
+  };
+
   return (
     <div className="min-h-screen py-12 flex items-center justify-center">
       <div
@@ -200,7 +235,10 @@ export function LoginForm() {
               </svg>
               Google
             </button>
-            <button className="flex items-center justify-center px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors">
+            <button
+              onClick={handleGitHubSignIn}
+              className="flex items-center justify-center px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors"
+            >
               <Github className="w-5 h-5 mr-2" />
               GitHub
             </button>
