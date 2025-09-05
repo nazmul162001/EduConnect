@@ -1,6 +1,5 @@
 "use client";
 import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
-import { AuthProvider } from "@/context/AuthContext";
 import { LoadingProvider } from "@/context/LoadingContext";
 import { ReduxProvider } from "@/redux/provider";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,18 +12,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <NextAuthProvider>
       <ReduxProvider>
         <LoadingProvider>
-          <AuthProvider>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={pathname}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
-          </AuthProvider>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </LoadingProvider>
       </ReduxProvider>
     </NextAuthProvider>

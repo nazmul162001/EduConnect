@@ -1,6 +1,6 @@
 "use client";
 import { FadeIn, SlideUp } from "@/components/motion/MotionPrimitives";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { getColleges } from "@/lib/data";
 import { saveToStorage, storageKeys } from "@/lib/storage";
 import { AdmissionForm } from "@/types";

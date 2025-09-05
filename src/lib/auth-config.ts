@@ -75,8 +75,34 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
+        // For OAuth users, we need to get the user ID from the database
+        if (account?.provider === "google" || account?.provider === "github") {
+          try {
+            const uri = process.env.DATABASE_URL;
+            if (uri) {
+              const client = new MongoClient(uri);
+              await client.connect();
+              const db = client.db("edu_connect");
+              const usersCollection = db.collection("User");
+
+              const dbUser = await usersCollection.findOne({
+                email: user.email,
+              });
+
+              if (dbUser) {
+                token.id = dbUser._id.toString();
+                token.role = dbUser.role;
+              }
+
+              await client.close();
+            }
+          } catch (error) {
+            console.error("Error getting user ID in jwt callback:", error);
+          }
+        } else {
+          token.id = user.id;
+          token.role = user.role;
+        }
       }
       return token;
     },

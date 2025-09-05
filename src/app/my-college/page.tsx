@@ -2,7 +2,7 @@
 import { Protected } from "@/components/auth/Protected";
 import { FadeIn, SlideUp } from "@/components/motion/MotionPrimitives";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { addReview, getCollegeById } from "@/lib/data";
 import { loadFromStorage, storageKeys } from "@/lib/storage";
 import { AdmissionForm, Review } from "@/types";

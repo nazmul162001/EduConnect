@@ -1,7 +1,8 @@
 import { verifyToken } from "@/lib/auth";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const isProtected = [
     "/colleges/",
@@ -12,26 +13,38 @@ export function middleware(req: NextRequest) {
 
   if (!isProtected) return NextResponse.next();
 
-  // Check for auth token in cookies
-  const token = req.cookies.get("auth-token")?.value;
-
-  if (!token) {
-    // Redirect to login if no token
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // Check for JWT auth token (manual login)
+  const authToken = req.cookies.get("auth-token")?.value;
+  if (authToken) {
+    try {
+      const payload = verifyToken(authToken);
+      if (payload) {
+        return NextResponse.next();
+      }
+    } catch (error) {
+      // JWT verification failed, continue to NextAuth check
+    }
   }
 
-  // Verify token
-  const payload = verifyToken(token);
-  if (!payload) {
-    // Redirect to login if invalid token
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // Check for NextAuth session token (Google/GitHub login)
+  try {
+    const nextAuthToken = await getToken({
+      req,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    if (nextAuthToken) {
+      return NextResponse.next();
+    }
+  } catch (error) {
+    // NextAuth verification failed
   }
 
-  return NextResponse.next();
+  // No valid authentication found, redirect to login
+  url.pathname = "/login";
+  return NextResponse.redirect(url);
 }
 
 export const config = {
-  matcher: ["/colleges/:path*", "/my-college", "/profile", "/admission"],
+  matcher: ["/my-college", "/profile", "/admission"],
 };
