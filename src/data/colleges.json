@@ -1,0 +1,157 @@
+[
+  {
+    "id": "c-oxford",
+    "name": "Oxford College",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop",
+    "rating": 4.8,
+    "admissionStart": "2025-06-01",
+    "admissionEnd": "2025-08-31",
+    "events": [
+      {
+        "id": "e1",
+        "title": "Freshers Week",
+        "date": "2025-09-05",
+        "description": "Orientation and welcome events."
+      },
+      {
+        "id": "e2",
+        "title": "Research Expo",
+        "date": "2025-11-12",
+        "description": "Showcasing student research and innovation."
+      }
+    ],
+    "researchHistory": "Pioneering AI and quantum computing initiatives with global collaborations.",
+    "researchPapers": [
+      {
+        "id": "r1",
+        "title": "Efficient Quantum Gates",
+        "url": "https://example.com/paper1",
+        "authors": ["A. Smith", "B. Lee"],
+        "year": 2024
+      },
+      {
+        "id": "r2",
+        "title": "Large-Scale Graph Learning",
+        "url": "https://example.com/paper2",
+        "authors": ["C. Kim"],
+        "year": 2023
+      }
+    ],
+    "sports": [
+      { "name": "Football" },
+      { "name": "Rowing" },
+      { "name": "Tennis" }
+    ],
+    "graduatesGallery": [
+      "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1523580846011-4810c21b8c54?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1523580846011-10a97f7a0f60?q=80&w=800&auto=format&fit=crop"
+    ]
+  },
+  {
+    "id": "c-harvard",
+    "name": "Harvard Institute of Technology",
+    "image": "https://images.unsplash.com/photo-1496302662116-35cc4f36df92?q=80&w=1600&auto=format&fit=crop",
+    "rating": 4.9,
+    "admissionStart": "2025-05-15",
+    "admissionEnd": "2025-08-15",
+    "events": [
+      {
+        "id": "e1",
+        "title": "Innovation Day",
+        "date": "2025-10-10",
+        "description": "Demos of cutting-edge student projects."
+      }
+    ],
+    "researchHistory": "Breakthroughs in bioinformatics and climate modeling.",
+    "researchPapers": [
+      {
+        "id": "r3",
+        "title": "Genome Assembly at Scale",
+        "url": "https://example.com/paper3",
+        "authors": ["D. Patel", "E. Wang"],
+        "year": 2022
+      }
+    ],
+    "sports": [{ "name": "Basketball" }, { "name": "Swimming" }],
+    "graduatesGallery": [
+      "https://images.unsplash.com/photo-1529651737248-dad5e287768e?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1519455953755-af066f52f1ea?q=80&w=800&auto=format&fit=crop"
+    ]
+  },
+  {
+    "id": "c-stanford",
+    "name": "Stanford College",
+    "image": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop",
+    "rating": 4.7,
+    "admissionStart": "2025-06-10",
+    "admissionEnd": "2025-09-05",
+    "events": [
+      {
+        "id": "e1",
+        "title": "AI Symposium",
+        "date": "2025-12-01",
+        "description": "Talks by leaders in AI."
+      }
+    ],
+    "researchHistory": "Leading robotics, HCI, and renewable energy research programs.",
+    "researchPapers": [
+      {
+        "id": "r4",
+        "title": "Human-Robot Collaboration",
+        "url": "https://example.com/paper4",
+        "authors": ["F. Gomez"],
+        "year": 2021
+      }
+    ],
+    "sports": [{ "name": "Volleyball" }, { "name": "Athletics" }],
+    "graduatesGallery": [
+      "https://images.unsplash.com/photo-1464983953574-0892a716854b?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1523580846011-9960147955b4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?q=80&w=800&auto=format&fit=crop"
+    ]
+  },
+  {
+    "id": "c-mit",
+    "name": "MIT College of Sciences",
+    "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1600&auto=format&fit=crop",
+    "rating": 4.85,
+    "admissionStart": "2025-06-20",
+    "admissionEnd": "2025-09-10",
+    "events": [],
+    "researchHistory": "Distributed systems and aerospace research with industry partners.",
+    "researchPapers": [],
+    "sports": [{ "name": "Hockey" }, { "name": "Table Tennis" }],
+    "graduatesGallery": [
+      "https://images.unsplash.com/photo-1519455953755-af066f52f1ea?q=80&w=800&auto=format&fit=crop"
+    ]
+  },
+  {
+    "id": "c-cambridge",
+    "name": "Cambridge University College",
+    "image": "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600&auto=format&fit=crop",
+    "rating": 4.6,
+    "admissionStart": "2025-05-25",
+    "admissionEnd": "2025-08-20",
+    "events": [],
+    "researchHistory": "History, linguistics and social sciences excellence.",
+    "researchPapers": [],
+    "sports": [{ "name": "Cricket" }, { "name": "Rowing" }],
+    "graduatesGallery": [
+      "https://images.unsplash.com/photo-1529651737248-dad5e287768e?q=80&w=800&auto=format&fit=crop"
+    ]
+  },
+  {
+    "id": "c-berkeley",
+    "name": "Berkeley College",
+    "image": "https://images.unsplash.com/photo-1483721310020-03333e577078?q=80&w=1600&auto=format&fit=crop",
+    "rating": 4.5,
+    "admissionStart": "2025-06-05",
+    "admissionEnd": "2025-09-01",
+    "events": [],
+    "researchHistory": "Open-source, systems research, and environmental sciences leadership.",
+    "researchPapers": [],
+    "sports": [{ "name": "Baseball" }, { "name": "Basketball" }],
+    "graduatesGallery": []
+  }
+]

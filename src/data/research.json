@@ -1,0 +1,23 @@
+[
+  {
+    "id": "p-101",
+    "title": "Green Computing at Scale",
+    "url": "https://example.com/green-computing",
+    "authors": ["Z. Rao", "M. Khan"],
+    "year": 2024
+  },
+  {
+    "id": "p-102",
+    "title": "AI for Healthcare",
+    "url": "https://example.com/ai-healthcare",
+    "authors": ["L. Tran"],
+    "year": 2023
+  },
+  {
+    "id": "p-103",
+    "title": "Ocean Microplastics Mapping",
+    "url": "https://example.com/ocean-mapping",
+    "authors": ["S. Ahmed", "T. Ito"],
+    "year": 2022
+  }
+]

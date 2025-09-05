@@ -1,0 +1,20 @@
+[
+  {
+    "id": "rv-1",
+    "collegeId": "c-oxford",
+    "userId": "seed",
+    "userName": "Ayesha",
+    "rating": 5,
+    "comment": "Amazing campus and supportive faculty!",
+    "createdAt": "2025-01-12T09:12:00.000Z"
+  },
+  {
+    "id": "rv-2",
+    "collegeId": "c-harvard",
+    "userId": "seed",
+    "userName": "Carlos",
+    "rating": 4,
+    "comment": "Great research opportunities and career services.",
+    "createdAt": "2025-02-22T14:30:00.000Z"
+  }
+]
