@@ -1,5 +1,4 @@
 "use client";
-import { LogoutButton } from "@/components/auth/LogoutButton";
 import { UserProfile } from "@/components/auth/UserProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { GraduationCap, LogIn, Menu } from "lucide-react";
@@ -95,7 +94,7 @@ export function Navbar() {
                 >
                   {user.name}
                 </Link>
-                <LogoutButton />
+                <UserProfile />
               </div>
             ) : (
               <div className="flex items-center gap-2">

@@ -1,15 +1,17 @@
 "use client";
+import { useAuth } from "@/hooks/useAuth";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { Lock, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function RegisterForm() {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [register, { isLoading }] = useRegisterMutation();
 
   const [formData, setFormData] = useState({
@@ -18,6 +20,27 @@ export function RegisterForm() {
     password: "",
   });
   const [error, setError] = useState("");
+
+  // Redirect logged-in users to home page
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  // Show loading or nothing while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen py-12 flex items-center justify-center">
+        <div className="text-white text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render the form if user is authenticated (redirect will happen)
+  if (isAuthenticated) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

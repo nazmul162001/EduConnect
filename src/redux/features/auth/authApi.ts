@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "./authSlice";
+import { User, clearAuth } from "./authSlice";
 
 interface LoginRequest {
   email: string;
@@ -47,6 +47,21 @@ export const authApi = createApi({
         method: "POST",
       }),
       invalidatesTags: ["User"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          // Clear the auth state immediately after successful logout
+          dispatch(clearAuth());
+          // Reset the entire auth API cache
+          dispatch(authApi.util.resetApiState());
+        } catch (error) {
+          console.error("Logout failed:", error);
+          // Even if logout fails, clear the auth state
+          dispatch(clearAuth());
+          // Reset the entire auth API cache
+          dispatch(authApi.util.resetApiState());
+        }
+      },
     }),
     getCurrentUser: builder.query<{ user: User }, void>({
       query: () => "/me",
