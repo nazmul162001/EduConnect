@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { MongoClient } from "mongodb";
+import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,7 +9,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, email } = body;
+    const { name, email, street, city, state, zipCode, country } = body;
 
     // Validate required fields
     if (!name || !email) {
@@ -27,26 +28,38 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Get the token from cookies
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token")?.value;
+    // Try to get NextAuth token first (for OAuth users)
+    const nextAuthToken = await getToken({ req: request });
 
-    if (!token) {
-      return NextResponse.json(
-        { error: "Authorization token required" },
-        { status: 401 }
-      );
-    }
+    let userId: string;
 
-    // Verify the JWT token
-    const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key";
-    const payload = jwt.verify(token, JWT_SECRET) as { userId: string };
+    if (nextAuthToken?.id) {
+      // NextAuth user (Google/GitHub)
+      userId = nextAuthToken.id as string;
+    } else {
+      // Try JWT token (for manual login users)
+      const cookieStore = await cookies();
+      const jwtToken = cookieStore.get("auth-token")?.value;
 
-    if (!payload || !payload.userId) {
-      return NextResponse.json(
-        { error: "Invalid or expired token" },
-        { status: 401 }
-      );
+      if (!jwtToken) {
+        return NextResponse.json(
+          { error: "Authorization token required" },
+          { status: 401 }
+        );
+      }
+
+      // Verify the JWT token
+      const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key";
+      const payload = jwt.verify(jwtToken, JWT_SECRET) as { userId: string };
+
+      if (!payload || !payload.userId) {
+        return NextResponse.json(
+          { error: "Invalid or expired token" },
+          { status: 401 }
+        );
+      }
+
+      userId = payload.userId;
     }
 
     // Connect to MongoDB
@@ -64,7 +77,7 @@ export async function PUT(request: NextRequest) {
     const { ObjectId } = await import("mongodb");
     const existingUser = await usersCollection.findOne({
       email: email.trim().toLowerCase(),
-      _id: { $ne: new ObjectId(payload.userId) },
+      _id: { $ne: new ObjectId(userId) },
     });
 
     if (existingUser) {
@@ -76,11 +89,17 @@ export async function PUT(request: NextRequest) {
 
     // Update the user profile
     const updateResult = await usersCollection.updateOne(
-      { _id: new ObjectId(payload.userId) },
+      { _id: new ObjectId(userId) },
       {
         $set: {
           name: name.trim(),
           email: email.trim().toLowerCase(),
+          // Address fields (optional, can be empty strings)
+          street: street?.trim() || "",
+          city: city?.trim() || "",
+          state: state?.trim() || "",
+          zipCode: zipCode?.trim() || "",
+          country: country?.trim() || "",
           updatedAt: new Date(),
         },
       }
@@ -92,7 +111,7 @@ export async function PUT(request: NextRequest) {
 
     // Get the updated user data
     const updatedUser = await usersCollection.findOne(
-      { _id: new ObjectId(payload.userId) },
+      { _id: new ObjectId(userId) },
       { projection: { password: 0 } }
     );
 
@@ -107,15 +126,28 @@ export async function PUT(request: NextRequest) {
       email: updatedUser.email,
       role: updatedUser.role,
       avatar: updatedUser.avatar,
+      // Address fields
+      street: updatedUser.street || "",
+      city: updatedUser.city || "",
+      state: updatedUser.state || "",
+      zipCode: updatedUser.zipCode || "",
+      country: updatedUser.country || "",
       createdAt: updatedUser.createdAt,
       updatedAt: updatedUser.updatedAt,
     };
 
-    return NextResponse.json({
+    // For NextAuth users, we need to trigger a session update
+    // This will cause the client to refetch the session data
+    const response = NextResponse.json({
       success: true,
       message: "Profile updated successfully",
       user: userData,
     });
+
+    // Add a header to indicate the session should be refreshed
+    response.headers.set("X-Session-Update", "true");
+
+    return response;
   } catch (error) {
     console.error("Error updating profile:", error);
     return NextResponse.json(

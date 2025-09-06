@@ -54,6 +54,12 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       role: "STUDENT",
+      // Address fields with default empty values
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -15,6 +15,11 @@ interface RegisterRequest {
 interface UpdateProfileRequest {
   name: string;
   email: string;
+  street?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
 }
 
 interface AuthResponse {
@@ -82,6 +87,7 @@ export const authApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+
           // Update the auth state with the new user data
           dispatch(
             authApi.util.updateQueryData(
@@ -92,6 +98,18 @@ export const authApi = createApi({
               }
             )
           );
+
+          // For NextAuth users, trigger a session refresh
+          // This ensures the NextAuth session is updated with the new data
+          if (typeof window !== "undefined") {
+            // Check if we're in a browser environment
+            const { getSession } = await import("next-auth/react");
+            try {
+              await getSession();
+            } catch (error) {
+              console.log("Session refresh completed");
+            }
+          }
         } catch (error) {
           console.error("Profile update failed:", error);
         }

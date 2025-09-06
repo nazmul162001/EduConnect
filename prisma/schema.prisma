@@ -15,6 +15,14 @@ model User {
   name      String
   role      Role     @default(STUDENT)
   avatar    String?
+  
+  // Address fields
+  street    String?  @default("")
+  city      String?  @default("")
+  state     String?  @default("")
+  zipCode   String?  @default("")
+  country   String?  @default("")
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

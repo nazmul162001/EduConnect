@@ -6,6 +6,12 @@ export interface User {
   email: string;
   role: "STUDENT" | "ADMIN" | "COLLEGE_ADMIN";
   avatar?: string;
+  // Address fields
+  street?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
 }
 
 interface AuthState {

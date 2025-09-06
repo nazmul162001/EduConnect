@@ -42,6 +42,12 @@ export function useAuth() {
             (session.user.role as "STUDENT" | "ADMIN" | "COLLEGE_ADMIN") ||
             "STUDENT",
           avatar: session.user.image || undefined,
+          // Address fields from NextAuth session
+          street: session.user.street || "",
+          city: session.user.city || "",
+          state: session.user.state || "",
+          zipCode: session.user.zipCode || "",
+          country: session.user.country || "",
         })
       );
       hasInitialized.current = true;

@@ -45,6 +45,12 @@ export const authOptions: NextAuthOptions = {
               password: await bcrypt.hash("google-oauth-user", 12), // Dummy password for OAuth users
               role: "STUDENT",
               avatar: user.image,
+              // Address fields with default empty values
+              street: "",
+              city: "",
+              state: "",
+              zipCode: "",
+              country: "",
               createdAt: new Date(),
               updatedAt: new Date(),
             };
@@ -91,7 +97,16 @@ export const authOptions: NextAuthOptions = {
 
               if (dbUser) {
                 token.id = dbUser._id.toString();
+                token.name = dbUser.name;
+                token.email = dbUser.email;
                 token.role = dbUser.role;
+                token.avatar = dbUser.avatar;
+                // Include address fields in token
+                token.street = dbUser.street || "";
+                token.city = dbUser.city || "";
+                token.state = dbUser.state || "";
+                token.zipCode = dbUser.zipCode || "";
+                token.country = dbUser.country || "";
               }
 
               await client.close();
@@ -108,8 +123,47 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        // Always fetch fresh user data from database to ensure we have the latest info
+        try {
+          const uri = process.env.DATABASE_URL;
+          if (uri) {
+            const client = new MongoClient(uri);
+            await client.connect();
+            const db = client.db("edu_connect");
+            const usersCollection = db.collection("User");
+
+            const dbUser = await usersCollection.findOne({
+              _id: new (await import("mongodb")).ObjectId(token.id as string),
+            });
+
+            if (dbUser) {
+              // Update session with fresh data from database
+              session.user.id = dbUser._id.toString();
+              session.user.name = dbUser.name;
+              session.user.email = dbUser.email;
+              session.user.role = dbUser.role;
+              session.user.image = dbUser.avatar;
+              // Include address fields in session
+              session.user.street = dbUser.street || "";
+              session.user.city = dbUser.city || "";
+              session.user.state = dbUser.state || "";
+              session.user.zipCode = dbUser.zipCode || "";
+              session.user.country = dbUser.country || "";
+            }
+
+            await client.close();
+          }
+        } catch (error) {
+          console.error("Error fetching user data in session callback:", error);
+          // Fallback to token data if database fetch fails
+          session.user.id = token.id as string;
+          session.user.role = token.role as string;
+          session.user.street = token.street as string;
+          session.user.city = token.city as string;
+          session.user.state = token.state as string;
+          session.user.zipCode = token.zipCode as string;
+          session.user.country = token.country as string;
+        }
       }
       return session;
     },

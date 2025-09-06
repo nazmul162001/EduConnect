@@ -16,6 +16,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -23,6 +24,7 @@ import { useState } from "react";
 
 export default function ProfilePage() {
   const { user } = useAuth();
+  const { data: session, update: updateSession } = useSession();
   const router = useRouter();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -30,6 +32,14 @@ export default function ProfilePage() {
     name: "",
     email: "",
   });
+  const [addressForm, setAddressForm] = useState({
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
+  });
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [error, setError] = useState("");
 
   // Initialize edit form with current user data
@@ -40,16 +50,42 @@ export default function ProfilePage() {
     });
   };
 
+  // Initialize address form with current user data
+  const initializeAddressForm = () => {
+    setAddressForm({
+      street: userProfile.address.street,
+      city: userProfile.address.city,
+      state: userProfile.address.state,
+      zipCode: userProfile.address.zipCode,
+      country: userProfile.address.country,
+    });
+  };
+
   // Handle edit button click
   const handleEditClick = () => {
     initializeEditForm();
     setIsEditModalOpen(true);
   };
 
+  // Handle address edit button click
+  const handleAddressEditClick = () => {
+    initializeAddressForm();
+    setIsAddressModalOpen(true);
+  };
+
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle address form input changes
+  const handleAddressInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setAddressForm((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -82,6 +118,11 @@ export default function ProfilePage() {
       setIsEditModalOpen(false);
       setEditForm({ name: "", email: "" });
 
+      // For NextAuth users, update the session to reflect the changes
+      if (session?.user) {
+        await updateSession();
+      }
+
       // You could show a success toast here
       console.log("Profile updated successfully:", result);
     } catch (error: unknown) {
@@ -108,6 +149,62 @@ export default function ProfilePage() {
     }
   };
 
+  // Handle address save changes
+  const handleAddressSaveChanges = async () => {
+    setError("");
+
+    try {
+      const result = await updateProfile({
+        name: userProfile.name,
+        email: userProfile.email,
+        street: addressForm.street.trim(),
+        city: addressForm.city.trim(),
+        state: addressForm.state.trim(),
+        zipCode: addressForm.zipCode.trim(),
+        country: addressForm.country.trim(),
+      }).unwrap();
+
+      // Success - close modal and show success message
+      setIsAddressModalOpen(false);
+      setAddressForm({
+        street: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "",
+      });
+
+      console.log("Address updated successfully:", result);
+
+      // For NextAuth users, update the session to reflect the changes
+      if (session?.user) {
+        await updateSession();
+      }
+
+      // The RTK Query mutation will automatically update the user data in the store
+      // and trigger a re-render, so we don't need to manually update userProfile
+    } catch (error: unknown) {
+      console.error("Error updating address:", error);
+
+      // Handle different error types
+      if (error && typeof error === "object" && "data" in error) {
+        const errorData = error as {
+          data?: { error?: string };
+          status?: number;
+        };
+        if (errorData.data?.error) {
+          setError(errorData.data.error);
+        } else if (errorData.status === 401) {
+          setError("Please log in again to update your address");
+        } else {
+          setError("Failed to update address. Please try again.");
+        }
+      } else {
+        setError("Failed to update address. Please try again.");
+      }
+    }
+  };
+
   // Handle modal close
   const handleCloseModal = () => {
     setIsEditModalOpen(false);
@@ -115,7 +212,20 @@ export default function ProfilePage() {
     setError("");
   };
 
-  // Mock data for demonstration - in real app, this would come from user's profile
+  // Handle address modal close
+  const handleAddressCloseModal = () => {
+    setIsAddressModalOpen(false);
+    setAddressForm({
+      street: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "",
+    });
+    setError("");
+  };
+
+  // User profile data - using real user data from auth
   const userProfile = {
     name: user?.name || "John Doe",
     email: user?.email || "john.doe@example.com",
@@ -128,11 +238,11 @@ export default function ProfilePage() {
     graduationYear: "2025",
     gpa: "3.8",
     address: {
-      street: "123 University Avenue",
-      city: "Stanford",
-      state: "California",
-      zipCode: "94305",
-      country: "United States",
+      street: user?.street || "",
+      city: user?.city || "",
+      state: user?.state || "",
+      zipCode: user?.zipCode || "",
+      country: user?.country || "",
     },
     joinDate: "September 2023",
     applications: 3,
@@ -291,45 +401,91 @@ export default function ProfilePage() {
             {/* Address Information */}
             <FadeIn delay={0.3}>
               <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 shadow-2xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <MapPin className="w-6 h-6 text-green-400" />
-                  <h3 className="text-2xl font-bold text-white">
-                    Address Information
-                  </h3>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-6 h-6 text-green-400" />
+                    <h3 className="text-2xl font-bold text-white">
+                      Address Information
+                    </h3>
+                  </div>
+                  {userProfile.address.street ||
+                  userProfile.address.city ||
+                  userProfile.address.state ||
+                  userProfile.address.zipCode ||
+                  userProfile.address.country ? (
+                    <button
+                      onClick={handleAddressEditClick}
+                      className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      Edit
+                    </button>
+                  ) : null}
                 </div>
 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-slate-300 w-20">Street:</span>
-                    <span className="text-white font-medium">
-                      {userProfile.address.street}
-                    </span>
+                {/* Check if address data exists */}
+                {userProfile.address.street ||
+                userProfile.address.city ||
+                userProfile.address.state ||
+                userProfile.address.zipCode ||
+                userProfile.address.country ? (
+                  <div className="space-y-3">
+                    {userProfile.address.street && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-300 w-20">Street:</span>
+                        <span className="text-white font-medium">
+                          {userProfile.address.street}
+                        </span>
+                      </div>
+                    )}
+                    {userProfile.address.city && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-300 w-20">City:</span>
+                        <span className="text-white font-medium">
+                          {userProfile.address.city}
+                        </span>
+                      </div>
+                    )}
+                    {userProfile.address.state && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-300 w-20">State:</span>
+                        <span className="text-white font-medium">
+                          {userProfile.address.state}
+                        </span>
+                      </div>
+                    )}
+                    {userProfile.address.zipCode && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-slate-300 w-20">ZIP:</span>
+                        <span className="text-white font-medium">
+                          {userProfile.address.zipCode}
+                        </span>
+                      </div>
+                    )}
+                    {userProfile.address.country && (
+                      <div className="flex items-center gap-3">
+                        <Globe className="w-5 h-5 text-blue-400" />
+                        <span className="text-white font-medium">
+                          {userProfile.address.country}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-slate-300 w-20">City:</span>
-                    <span className="text-white font-medium">
-                      {userProfile.address.city}
-                    </span>
+                ) : (
+                  <div className="text-center py-8">
+                    <MapPin className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                    <p className="text-slate-400 mb-4">
+                      No address information added yet
+                    </p>
+                    <button
+                      onClick={handleAddressEditClick}
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg mx-auto"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      Add Address
+                    </button>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-slate-300 w-20">State:</span>
-                    <span className="text-white font-medium">
-                      {userProfile.address.state}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-slate-300 w-20">ZIP:</span>
-                    <span className="text-white font-medium">
-                      {userProfile.address.zipCode}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-blue-400" />
-                    <span className="text-white font-medium">
-                      {userProfile.address.country}
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
             </FadeIn>
           </div>
@@ -510,6 +666,142 @@ export default function ProfilePage() {
                   <>
                     <Save className="w-4 h-4" />
                     Save Changes
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Address Edit Modal */}
+      {isAddressModalOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900/95 backdrop-blur-sm rounded-2xl border border-purple-500/30 shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-slate-700">
+              <h2 className="text-2xl font-bold text-white">Edit Address</h2>
+              <button
+                onClick={handleAddressCloseModal}
+                className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-400" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              {/* Error Message */}
+              {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <p className="text-red-400 text-sm">{error}</p>
+                </div>
+              )}
+
+              {/* Street Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300">
+                  Street Address
+                </label>
+                <input
+                  type="text"
+                  name="street"
+                  value={addressForm.street}
+                  onChange={handleAddressInputChange}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Enter your street address"
+                  disabled={isUpdating}
+                />
+              </div>
+
+              {/* City Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300">
+                  City
+                </label>
+                <input
+                  type="text"
+                  name="city"
+                  value={addressForm.city}
+                  onChange={handleAddressInputChange}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Enter your city"
+                  disabled={isUpdating}
+                />
+              </div>
+
+              {/* State Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300">
+                  State/Province
+                </label>
+                <input
+                  type="text"
+                  name="state"
+                  value={addressForm.state}
+                  onChange={handleAddressInputChange}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Enter your state or province"
+                  disabled={isUpdating}
+                />
+              </div>
+
+              {/* ZIP Code Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300">
+                  ZIP/Postal Code
+                </label>
+                <input
+                  type="text"
+                  name="zipCode"
+                  value={addressForm.zipCode}
+                  onChange={handleAddressInputChange}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Enter your ZIP or postal code"
+                  disabled={isUpdating}
+                />
+              </div>
+
+              {/* Country Field */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300">
+                  Country
+                </label>
+                <input
+                  type="text"
+                  name="country"
+                  value={addressForm.country}
+                  onChange={handleAddressInputChange}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                  placeholder="Enter your country"
+                  disabled={isUpdating}
+                />
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center gap-3 p-6 border-t border-slate-700">
+              <button
+                onClick={handleAddressCloseModal}
+                className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                disabled={isUpdating}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddressSaveChanges}
+                disabled={isUpdating}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isUpdating ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    Save Address
                   </>
                 )}
               </button>

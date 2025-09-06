@@ -52,6 +52,12 @@ export async function GET() {
       email: user.email,
       role: user.role,
       avatar: user.avatar,
+      // Address fields
+      street: user.street || "",
+      city: user.city || "",
+      state: user.state || "",
+      zipCode: user.zipCode || "",
+      country: user.country || "",
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
