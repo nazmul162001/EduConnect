@@ -59,7 +59,7 @@ export default function AppliedCollegeCard({
 
           <p className="text-blue-100 text-sm mt-6 leading-relaxed">
             Your application is being carefully reviewed by our admissions
-            committee. We'll notify you as soon as a decision is made.
+            committee. We&apos;ll notify you as soon as a decision is made.
           </p>
 
           <div className="mt-6 flex gap-3">

@@ -42,8 +42,8 @@ export default function NoApplicationState() {
               </h2>
 
               <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
-                You haven't submitted any college applications yet. Take the
-                first step towards your dream education by applying to your
+                You haven&apos;t submitted any college applications yet. Take
+                the first step towards your dream education by applying to your
                 preferred college.
               </p>
 

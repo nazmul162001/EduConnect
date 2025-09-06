@@ -10,9 +10,7 @@ import { useEffect, useRef } from "react";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { user, isAuthenticated, isLoading } = useAppSelector(
-    (state) => state.root.auth
-  );
+  const { user, isLoading } = useAppSelector((state) => state.root.auth);
   const { data: session, status: sessionStatus } = useSession();
   const hasInitialized = useRef(false);
 
@@ -57,7 +55,7 @@ export function useAuth() {
       );
       hasInitialized.current = true;
     }
-  }, [session, dispatch]);
+  }, [session, dispatch, sessionStatus]);
 
   // Handle JWT authentication (manual login users)
   useEffect(() => {

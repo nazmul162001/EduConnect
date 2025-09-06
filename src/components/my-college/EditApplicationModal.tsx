@@ -100,13 +100,19 @@ export default function EditApplicationModal({
       });
 
       onClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating application:", error);
+      let errorMessage = "Failed to update application. Please try again.";
+      if (error && typeof error === "object" && "data" in error) {
+        const errorData = (error as Record<string, { error?: string }>).data;
+        if (errorData?.error) {
+          errorMessage = errorData.error;
+        }
+      }
+
       await Swal.fire({
         title: "Update Failed",
-        text:
-          error?.data?.error ||
-          "Failed to update application. Please try again.",
+        text: errorMessage,
         icon: "error",
         confirmButtonText: "OK",
         confirmButtonColor: "#ef4444",

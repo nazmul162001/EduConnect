@@ -110,7 +110,7 @@ export const authApi = createApi({
             const { getSession } = await import("next-auth/react");
             try {
               await getSession();
-            } catch (error) {
+            } catch (_error) {
               console.log("Session refresh completed");
             }
           }
