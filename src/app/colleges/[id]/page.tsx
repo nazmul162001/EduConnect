@@ -16,6 +16,7 @@ export default function CollegeDetailsPage({
   const [college, setCollege] = useState<College | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imgSrc, setImgSrc] = useState<string>("");
 
   useEffect(() => {
     async function fetchCollege() {
@@ -31,6 +32,7 @@ export default function CollegeDetailsPage({
         }
         const data = await response.json();
         setCollege(data.data);
+        setImgSrc(data.data.image);
       } catch (err) {
         setError("Failed to load college details");
         console.error("Error fetching college:", err);
@@ -98,10 +100,13 @@ export default function CollegeDetailsPage({
           <SlideUp>
             <div className="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8">
               <Image
-                src={college.image}
+                src={imgSrc}
                 alt={college.name}
                 fill
                 className="object-cover"
+                onError={() =>
+                  setImgSrc("https://picsum.photos/seed/college/1200/675")
+                }
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-6 left-6 text-white">
