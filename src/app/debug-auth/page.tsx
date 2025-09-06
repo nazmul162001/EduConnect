@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 export default function DebugAuthPage() {
   const { data: session, status } = useSession();
-  const [envCheck, setEnvCheck] = useState<any>(null);
+  const [envCheck, setEnvCheck] = useState<Record<
+    string,
+    string | boolean
+  > | null>(null);
 
   useEffect(() => {
     // Check environment variables

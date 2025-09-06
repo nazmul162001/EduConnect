@@ -1,7 +1,7 @@
 "use client";
 import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
 import { LoadingProvider } from "@/context/LoadingContext";
-import { ReduxProvider } from "@/redux/provider";
+import { ReduxProvider } from "@/redux/ReduxProvider";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import React from "react";

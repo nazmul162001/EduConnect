@@ -25,7 +25,7 @@ export async function GET(
     let objectId;
     try {
       objectId = new ObjectId(id);
-    } catch (error) {
+    } catch (_error) {
       return NextResponse.json(
         { error: "Invalid college ID format" },
         { status: 400 }

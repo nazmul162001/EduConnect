@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === "development",
   useSecureCookies: process.env.NODE_ENV === "production",
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile: _profile }) {
       if (account?.provider === "google" || account?.provider === "github") {
         try {
           // Connect to MongoDB
@@ -160,11 +160,13 @@ export const authOptions: NextAuthOptions = {
               session.user.zipCode = dbUser.zipCode || "";
               session.user.country = dbUser.country || "";
               // Include college fields in session
-              (session.user as any).university = dbUser.university || "";
-              (session.user as any).major = dbUser.major || "";
-              (session.user as any).graduationYear =
+              (session.user as Record<string, string>).university =
+                dbUser.university || "";
+              (session.user as Record<string, string>).major =
+                dbUser.major || "";
+              (session.user as Record<string, string>).graduationYear =
                 dbUser.graduationYear || "";
-              (session.user as any).gpa = dbUser.gpa || "";
+              (session.user as Record<string, string>).gpa = dbUser.gpa || "";
             }
 
             await client.close();
@@ -179,10 +181,13 @@ export const authOptions: NextAuthOptions = {
           session.user.state = token.state as string;
           session.user.zipCode = token.zipCode as string;
           session.user.country = token.country as string;
-          (session.user as any).university = token.university as string;
-          (session.user as any).major = token.major as string;
-          (session.user as any).graduationYear = token.graduationYear as string;
-          (session.user as any).gpa = token.gpa as string;
+          (session.user as Record<string, string>).university =
+            token.university as string;
+          (session.user as Record<string, string>).major =
+            token.major as string;
+          (session.user as Record<string, string>).graduationYear =
+            token.graduationYear as string;
+          (session.user as Record<string, string>).gpa = token.gpa as string;
         }
       }
       return session;
