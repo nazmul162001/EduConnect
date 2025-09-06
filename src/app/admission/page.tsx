@@ -2,34 +2,40 @@
 import { Protected } from "@/components/auth/Protected";
 import { FadeIn, SlideUp } from "@/components/motion/MotionPrimitives";
 import { useAuth } from "@/hooks/useAuth";
-import { getColleges } from "@/lib/data";
-import { saveToStorage, storageKeys } from "@/lib/storage";
-import { AdmissionForm } from "@/types";
+import { useCreateAdmissionMutation } from "@/redux/features/admission/admissionApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Calendar, ChevronDown, GraduationCap, Upload } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 import { z } from "zod";
 
 const schema = z.object({
-  candidateName: z.string().min(2),
-  subject: z.string().min(2),
-  email: z.string().email(),
-  phone: z.string().min(6),
-  address: z.string().min(4),
-  dateOfBirth: z.string(),
-  imageUrl: z.string().url().or(z.literal("")),
-  collegeId: z.string().min(1),
+  studentName: z.string().min(2, "Full name must be at least 2 characters"),
+  course: z.string().min(2, "Course must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(6, "Phone number must be at least 6 characters"),
+  address: z.string().min(4, "Address must be at least 4 characters"),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
+  profileImage: z.string().url("Please enter a valid URL").or(z.literal("")),
+  collegeId: z.string().min(1, "Please select a college"),
 });
 
+type AdmissionForm = z.infer<typeof schema>;
+
 function InnerAdmission() {
-  const colleges = getColleges();
   const params = useSearchParams();
   const router = useRouter();
   const { user } = useAuth();
   const preselected = params.get("college") ?? "";
+  const [colleges, setColleges] = useState<any[]>([]);
+  const [isLoadingColleges, setIsLoadingColleges] = useState(true);
+
+  const [createAdmission, { isLoading: isSubmitting }] =
+    useCreateAdmissionMutation();
+
   const {
     register,
     handleSubmit,
@@ -38,14 +44,77 @@ function InnerAdmission() {
     watch,
   } = useForm<AdmissionForm>({
     resolver: zodResolver(schema),
-    defaultValues: { collegeId: preselected, email: user?.email ?? "" },
+    defaultValues: {
+      collegeId: preselected,
+      email: user?.email ?? "",
+      studentName: user?.name ?? "",
+      phone: user?.phone ?? "",
+      address:
+        user?.street && user?.city && user?.state && user?.country
+          ? `${user.street}, ${user.city}, ${user.state}, ${user.country}`
+          : "",
+    },
   });
   const selected = watch("collegeId");
 
-  const onSubmit = (values: AdmissionForm) => {
-    saveToStorage(storageKeys.myCollege, values);
-    reset();
-    router.push("/my-college");
+  // Fetch colleges from API
+  useEffect(() => {
+    const fetchColleges = async () => {
+      try {
+        const response = await fetch("/api/colleges");
+        const data = await response.json();
+        if (data.success) {
+          setColleges(data.colleges);
+        }
+      } catch (error) {
+        console.error("Error fetching colleges:", error);
+      } finally {
+        setIsLoadingColleges(false);
+      }
+    };
+
+    fetchColleges();
+  }, []);
+
+  const onSubmit = async (values: AdmissionForm) => {
+    try {
+      const result = await createAdmission({
+        collegeId: values.collegeId,
+        studentName: values.studentName,
+        course: values.course,
+        email: values.email,
+        phone: values.phone,
+        dateOfBirth: values.dateOfBirth,
+        profileImage: values.profileImage || undefined,
+        address: values.address,
+      }).unwrap();
+
+      // Show success message
+      await Swal.fire({
+        title: "Application Submitted!",
+        text: "Your college admission application has been submitted successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#3b82f6",
+      });
+
+      // Reset form and redirect
+      reset();
+      router.push("/my-college");
+    } catch (error: any) {
+      console.error("Error submitting application:", error);
+
+      // Show error message
+      await Swal.fire({
+        title: "Submission Failed",
+        text:
+          error?.data?.error ||
+          "Failed to submit application. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#ef4444",
+      });
+    }
   };
 
   return (
@@ -100,12 +169,17 @@ function InnerAdmission() {
                   <select
                     {...register("collegeId")}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none appearance-none text-white placeholder-blue-200"
+                    disabled={isLoadingColleges}
                   >
-                    <option value="">Choose a college to apply to...</option>
+                    <option value="">
+                      {isLoadingColleges
+                        ? "Loading colleges..."
+                        : "Choose a college to apply to..."}
+                    </option>
                     {colleges.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name} - Rating: {c.rating.toFixed(1)} • Research:{" "}
-                        {c.researchPapers.length}
+                        {c.name} - Rating: {c.rating.toFixed(1)} • Location:{" "}
+                        {c.location}
                       </option>
                     ))}
                   </select>
@@ -130,13 +204,13 @@ function InnerAdmission() {
                     Full Name <span className="text-red-400">*</span>
                   </label>
                   <input
-                    {...register("candidateName")}
+                    {...register("studentName")}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
                     placeholder="Enter your full name"
                   />
-                  {errors.candidateName && (
+                  {errors.studentName && (
                     <p className="text-red-400 text-sm mt-1">
-                      {errors.candidateName.message}
+                      {errors.studentName.message}
                     </p>
                   )}
                 </motion.div>
@@ -151,13 +225,13 @@ function InnerAdmission() {
                     Preferred Subject <span className="text-red-400">*</span>
                   </label>
                   <input
-                    {...register("subject")}
+                    {...register("course")}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
                     placeholder="e.g., Computer Science, Medicine"
                   />
-                  {errors.subject && (
+                  {errors.course && (
                     <p className="text-red-400 text-sm mt-1">
-                      {errors.subject.message}
+                      {errors.course.message}
                     </p>
                   )}
                 </motion.div>
@@ -240,15 +314,15 @@ function InnerAdmission() {
                   </label>
                   <div className="relative">
                     <input
-                      {...register("imageUrl")}
+                      {...register("profileImage")}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
                       placeholder="https://example.com/image.jpg"
                     />
                     <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-300" />
                   </div>
-                  {errors.imageUrl && (
+                  {errors.profileImage && (
                     <p className="text-red-400 text-sm mt-1">
-                      {errors.imageUrl.message}
+                      {errors.profileImage.message}
                     </p>
                   )}
                 </motion.div>
@@ -285,9 +359,12 @@ function InnerAdmission() {
               >
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-8 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
-                  Submit Application
+                  {isSubmitting
+                    ? "Submitting Application..."
+                    : "Submit Application"}
                 </button>
               </motion.div>
 

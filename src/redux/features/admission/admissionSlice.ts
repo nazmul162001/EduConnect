@@ -1,17 +1,55 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export interface College {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  location: string;
+  rating: number;
+  website?: string;
+  email?: string;
+  phone?: string;
+}
+
 export interface Admission {
   id: string;
   studentName: string;
   email: string;
   phone: string;
   course: string;
+  dateOfBirth?: string;
+  profileImage?: string;
+  address?: string;
   status: "PENDING" | "APPROVED" | "REJECTED" | "WAITLISTED";
   applicationDate: string;
+  collegeId: string;
+  college?: College;
+  userId: string;
   createdAt: string;
   updatedAt: string;
-  userId: string;
+}
+
+export interface CreateAdmissionRequest {
   collegeId: string;
+  studentName: string;
+  course: string;
+  email: string;
+  phone: string;
+  dateOfBirth?: string;
+  profileImage?: string;
+  address?: string;
+}
+
+export interface AdmissionResponse {
+  success: boolean;
+  message: string;
+  admission: Admission;
+}
+
+export interface GetAdmissionsResponse {
+  success: boolean;
+  admissions: Admission[];
 }
 
 interface AdmissionState {
@@ -30,18 +68,11 @@ const admissionSlice = createSlice({
   name: "admission",
   initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
-    },
     setAdmissions: (state, action: PayloadAction<Admission[]>) => {
       state.admissions = action.payload;
-      state.error = null;
     },
     addAdmission: (state, action: PayloadAction<Admission>) => {
-      state.admissions.push(action.payload);
+      state.admissions.unshift(action.payload);
     },
     updateAdmission: (state, action: PayloadAction<Admission>) => {
       const index = state.admissions.findIndex(
@@ -56,16 +87,26 @@ const admissionSlice = createSlice({
         (admission) => admission.id !== action.payload
       );
     },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
 });
 
 export const {
-  setLoading,
-  setError,
   setAdmissions,
   addAdmission,
   updateAdmission,
   removeAdmission,
+  setLoading,
+  setError,
+  clearError,
 } = admissionSlice.actions;
 
 export default admissionSlice.reducer;

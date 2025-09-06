@@ -18,10 +18,25 @@ export async function GET() {
     // Fetch all colleges from the database
     const colleges = await collegesCollection.find({}).toArray();
 
+    // Convert MongoDB documents to proper format
+    const formattedColleges = colleges.map((college) => ({
+      id: college._id.toString(),
+      name: college.name,
+      description: college.description,
+      image: college.image,
+      location: college.location,
+      rating: college.rating,
+      website: college.website,
+      email: college.email,
+      phone: college.phone,
+      createdAt: college.createdAt,
+      updatedAt: college.updatedAt,
+    }));
+
     return NextResponse.json({
       success: true,
-      data: colleges,
-      count: colleges.length,
+      colleges: formattedColleges,
+      count: formattedColleges.length,
     });
   } catch (error) {
     console.error("Error fetching colleges:", error);

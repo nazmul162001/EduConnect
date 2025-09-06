@@ -2,7 +2,7 @@ import { College } from "@/types";
 
 export interface CollegesApiResponse {
   success: boolean;
-  data: College[];
+  colleges: College[];
   count: number;
   error?: string;
   message?: string;
@@ -27,7 +27,7 @@ export async function fetchColleges(): Promise<College[]> {
       throw new Error(result.error || "Failed to fetch colleges");
     }
 
-    return result.data;
+    return result.colleges;
   } catch (error) {
     console.error("Error fetching colleges:", error);
     // Return empty array as fallback

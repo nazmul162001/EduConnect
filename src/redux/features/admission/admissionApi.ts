@@ -1,40 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Admission } from "./admissionSlice";
-
-interface CreateAdmissionRequest {
-  studentName: string;
-  email: string;
-  phone: string;
-  course: string;
-  collegeId: string;
-}
-
-interface UpdateAdmissionRequest {
-  id: string;
-  status: "PENDING" | "APPROVED" | "REJECTED" | "WAITLISTED";
-}
-
-interface AdmissionResponse {
-  message: string;
-  admission: Admission;
-}
+import {
+  AdmissionResponse,
+  CreateAdmissionRequest,
+  GetAdmissionsResponse,
+} from "./admissionSlice";
 
 export const admissionApi = createApi({
   reducerPath: "admissionApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "/api/admissions",
-    credentials: "include",
   }),
   tagTypes: ["Admission"],
   endpoints: (builder) => ({
-    getAdmissions: builder.query<{ admissions: Admission[] }, void>({
-      query: () => "/",
-      providesTags: ["Admission"],
-    }),
-    getAdmissionById: builder.query<{ admission: Admission }, string>({
-      query: (id) => `/${id}`,
-      providesTags: ["Admission"],
-    }),
     createAdmission: builder.mutation<
       AdmissionResponse,
       CreateAdmissionRequest
@@ -45,32 +22,30 @@ export const admissionApi = createApi({
         body: admissionData,
       }),
       invalidatesTags: ["Admission"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          // Add the new admission to the store
+          dispatch(
+            admissionApi.util.updateQueryData(
+              "getAdmissions",
+              undefined,
+              (draft) => {
+                draft.admissions.unshift(data.admission);
+              }
+            )
+          );
+        } catch (error) {
+          console.error("Error creating admission:", error);
+        }
+      },
     }),
-    updateAdmission: builder.mutation<
-      AdmissionResponse,
-      UpdateAdmissionRequest
-    >({
-      query: ({ id, status }) => ({
-        url: `/${id}`,
-        method: "PUT",
-        body: { status },
-      }),
-      invalidatesTags: ["Admission"],
-    }),
-    deleteAdmission: builder.mutation<{ message: string }, string>({
-      query: (id) => ({
-        url: `/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Admission"],
+    getAdmissions: builder.query<GetAdmissionsResponse, void>({
+      query: () => "/",
+      providesTags: ["Admission"],
     }),
   }),
 });
 
-export const {
-  useGetAdmissionsQuery,
-  useGetAdmissionByIdQuery,
-  useCreateAdmissionMutation,
-  useUpdateAdmissionMutation,
-  useDeleteAdmissionMutation,
-} = admissionApi;
+export const { useCreateAdmissionMutation, useGetAdmissionsQuery } =
+  admissionApi;

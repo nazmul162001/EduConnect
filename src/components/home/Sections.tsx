@@ -41,7 +41,7 @@ export function FeaturedColleges() {
     fetchCollegesData();
   }, []);
 
-  const featured = colleges.slice(0, 3);
+  const featured = colleges?.slice(0, 3) || [];
 
   if (loading) {
     return (

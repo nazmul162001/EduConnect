@@ -55,6 +55,9 @@ model Admission {
   email          String
   phone          String
   course         String
+  dateOfBirth    String?
+  profileImage   String?
+  address        String?
   status         AdmissionStatus @default(PENDING)
   applicationDate DateTime     @default(now())
   createdAt      DateTime     @default(now())
