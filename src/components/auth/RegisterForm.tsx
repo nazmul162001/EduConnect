@@ -55,8 +55,15 @@ export function RegisterForm() {
       const result = await register(formData).unwrap();
       dispatch(setUser(result.user));
       router.push("/");
-    } catch (err: any) {
-      setError(err.data?.error || "Registration failed");
+    } catch (err: unknown) {
+      let errorMessage = "Registration failed";
+      if (err && typeof err === "object" && "data" in err) {
+        const errorData = (err as Record<string, { error?: string }>).data;
+        if (errorData?.error) {
+          errorMessage = errorData.error;
+        }
+      }
+      setError(errorMessage);
     }
   };
 

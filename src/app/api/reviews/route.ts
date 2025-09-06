@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const MONGODB_URI = process.env.DATABASE_URL!;
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const client = new MongoClient(MONGODB_URI);
 
   try {

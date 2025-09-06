@@ -30,7 +30,9 @@ function InnerAdmission() {
   const router = useRouter();
   const { user } = useAuth();
   const preselected = params.get("college") ?? "";
-  const [colleges, setColleges] = useState<any[]>([]);
+  const [colleges, setColleges] = useState<
+    Array<{ id: string; name: string; rating: number; location: string }>
+  >([]);
   const [isLoadingColleges, setIsLoadingColleges] = useState(true);
 
   const [createAdmission, { isLoading: isSubmitting }] =
@@ -41,21 +43,21 @@ function InnerAdmission() {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
+    // watch, // Removed unused variable
   } = useForm<AdmissionForm>({
     resolver: zodResolver(schema),
     defaultValues: {
       collegeId: preselected,
       email: user?.email ?? "",
       studentName: user?.name ?? "",
-      phone: user?.phone ?? "",
+      phone: "",
       address:
         user?.street && user?.city && user?.state && user?.country
           ? `${user.street}, ${user.city}, ${user.state}, ${user.country}`
           : "",
     },
   });
-  const selected = watch("collegeId");
+  // const selected = watch("collegeId"); // Removed unused variable
 
   // Fetch colleges from API
   useEffect(() => {
@@ -78,7 +80,7 @@ function InnerAdmission() {
 
   const onSubmit = async (values: AdmissionForm) => {
     try {
-      const result = await createAdmission({
+      await createAdmission({
         collegeId: values.collegeId,
         studentName: values.studentName,
         course: values.course,
@@ -108,15 +110,21 @@ function InnerAdmission() {
       if (alertResult.isConfirmed) {
         router.push("/my-college");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting application:", error);
 
       // Show error message
+      let errorMessage = "Failed to submit application. Please try again.";
+      if (error && typeof error === "object" && "data" in error) {
+        const errorData = (error as Record<string, { error?: string }>).data;
+        if (errorData?.error) {
+          errorMessage = errorData.error;
+        }
+      }
+
       await Swal.fire({
         title: "Submission Failed",
-        text:
-          error?.data?.error ||
-          "Failed to submit application. Please try again.",
+        text: errorMessage,
         icon: "error",
         confirmButtonText: "OK",
         confirmButtonColor: "#ef4444",

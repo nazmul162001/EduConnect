@@ -116,7 +116,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Build update object with only provided fields
-    const updateFields: any = {
+    const updateFields: Record<string, string | Date> = {
       updatedAt: new Date(),
     };
 

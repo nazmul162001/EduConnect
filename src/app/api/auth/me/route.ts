@@ -17,7 +17,7 @@ export async function GET() {
 
     // Verify token
     const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key";
-    const payload = jwt.verify(token, JWT_SECRET) as any;
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: string };
 
     if (!payload) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });

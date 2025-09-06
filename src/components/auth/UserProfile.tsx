@@ -84,10 +84,14 @@ export function UserProfile() {
           className="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg px-3 py-2 transition-colors"
         >
           <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-            {user.avatar ? (
+            {(user as Record<string, string>).image ||
+            (user as Record<string, string>).avatar ? (
               <Image
-                src={user.avatar}
-                alt={user.name}
+                src={
+                  (user as Record<string, string>).image ||
+                  (user as Record<string, string>).avatar
+                }
+                alt={user.name || "User"}
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-full object-cover"
