@@ -51,6 +51,11 @@ export const authOptions: NextAuthOptions = {
               state: "",
               zipCode: "",
               country: "",
+              // College fields with default empty values
+              university: "",
+              major: "",
+              graduationYear: "",
+              gpa: "",
               createdAt: new Date(),
               updatedAt: new Date(),
             };
@@ -107,6 +112,11 @@ export const authOptions: NextAuthOptions = {
                 token.state = dbUser.state || "";
                 token.zipCode = dbUser.zipCode || "";
                 token.country = dbUser.country || "";
+                // Include college fields in token
+                token.university = dbUser.university || "";
+                token.major = dbUser.major || "";
+                token.graduationYear = dbUser.graduationYear || "";
+                token.gpa = dbUser.gpa || "";
               }
 
               await client.close();
@@ -149,6 +159,12 @@ export const authOptions: NextAuthOptions = {
               session.user.state = dbUser.state || "";
               session.user.zipCode = dbUser.zipCode || "";
               session.user.country = dbUser.country || "";
+              // Include college fields in session
+              (session.user as any).university = dbUser.university || "";
+              (session.user as any).major = dbUser.major || "";
+              (session.user as any).graduationYear =
+                dbUser.graduationYear || "";
+              (session.user as any).gpa = dbUser.gpa || "";
             }
 
             await client.close();
@@ -163,6 +179,10 @@ export const authOptions: NextAuthOptions = {
           session.user.state = token.state as string;
           session.user.zipCode = token.zipCode as string;
           session.user.country = token.country as string;
+          (session.user as any).university = token.university as string;
+          (session.user as any).major = token.major as string;
+          (session.user as any).graduationYear = token.graduationYear as string;
+          (session.user as any).gpa = token.gpa as string;
         }
       }
       return session;

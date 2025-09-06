@@ -12,6 +12,11 @@ export interface User {
   state?: string;
   zipCode?: string;
   country?: string;
+  // College fields
+  university?: string;
+  major?: string;
+  graduationYear?: string;
+  gpa?: string;
 }
 
 interface AuthState {

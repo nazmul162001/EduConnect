@@ -13,13 +13,17 @@ interface RegisterRequest {
 }
 
 interface UpdateProfileRequest {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   street?: string;
   city?: string;
   state?: string;
   zipCode?: string;
   country?: string;
+  university?: string;
+  major?: string;
+  graduationYear?: string;
+  gpa?: string;
 }
 
 interface AuthResponse {
@@ -80,7 +84,7 @@ export const authApi = createApi({
     updateProfile: builder.mutation<AuthResponse, UpdateProfileRequest>({
       query: (profileData) => ({
         url: "/update-profile",
-        method: "PUT",
+        method: "PATCH",
         body: profileData,
       }),
       invalidatesTags: ["User"],

@@ -23,6 +23,12 @@ model User {
   zipCode   String?  @default("")
   country   String?  @default("")
   
+  // College fields
+  university     String?  @default("")
+  major          String?  @default("")
+  graduationYear String?  @default("")
+  gpa            String?  @default("")
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -48,6 +48,11 @@ export function useAuth() {
           state: session.user.state || "",
           zipCode: session.user.zipCode || "",
           country: session.user.country || "",
+          // College fields from NextAuth session
+          university: session.user.university || "",
+          major: session.user.major || "",
+          graduationYear: session.user.graduationYear || "",
+          gpa: session.user.gpa || "",
         })
       );
       hasInitialized.current = true;
