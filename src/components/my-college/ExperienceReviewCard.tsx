@@ -120,27 +120,27 @@ export default function ExperienceReviewCard({
 
   return (
     <SlideUp>
-      <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
-            <MessageCircle className="w-6 h-6 text-white" />
+      <div className="bg-white/5 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl p-4 sm:p-6 md:p-8">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
+            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">
               Share Your Experience
             </h2>
-            <p className="text-blue-200">
+            <p className="text-blue-200 text-sm sm:text-base">
               Help other students with your insights
             </p>
           </div>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           <div>
-            <label className="block text-blue-200 text-sm font-medium mb-4">
+            <label className="block text-blue-200 text-sm font-medium mb-3 sm:mb-4">
               Rate your application experience
             </label>
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3 justify-center sm:justify-start">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -148,7 +148,7 @@ export default function ExperienceReviewCard({
                   className="group transition-all duration-300 hover:scale-110"
                 >
                   <Star
-                    className={`w-10 h-10 transition-all duration-300 ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 transition-all duration-300 ${
                       star <= rating
                         ? "text-yellow-400 fill-current drop-shadow-lg"
                         : "text-gray-400 hover:text-yellow-300 group-hover:scale-110"
@@ -158,7 +158,7 @@ export default function ExperienceReviewCard({
               ))}
             </div>
             {rating > 0 && (
-              <p className="text-blue-200 text-sm mt-2">
+              <p className="text-blue-200 text-sm mt-2 text-center sm:text-left">
                 {rating === 5
                   ? "Excellent!"
                   : rating === 4
@@ -173,30 +173,30 @@ export default function ExperienceReviewCard({
           </div>
 
           <div>
-            <label className="block text-blue-200 text-sm font-medium mb-4">
+            <label className="block text-blue-200 text-sm font-medium mb-3 sm:mb-4">
               Share your thoughts
             </label>
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Tell us about your experience with the application process, what you liked, what could be improved, or any tips for future applicants..."
-              className="w-full h-40 px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 resize-none transition-all duration-300 focus:bg-white/10"
+              className="w-full h-32 sm:h-40 px-4 sm:px-6 py-3 sm:py-4 bg-white/5 border border-white/10 rounded-xl focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 resize-none transition-all duration-300 focus:bg-white/10 text-sm sm:text-base"
             />
           </div>
 
           <button
             onClick={handleSubmitReview}
             disabled={isSubmitting}
-            className="group w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 disabled:hover:scale-100 transition-all duration-300 flex items-center justify-center gap-3"
+            className="group w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 disabled:hover:scale-100 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base"
           >
             {isSubmitting ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
                 Submitting...
               </>
             ) : (
               <>
-                <Heart className="w-5 h-5 group-hover:animate-pulse" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-pulse" />
                 Submit Review
               </>
             )}

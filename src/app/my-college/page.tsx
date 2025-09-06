@@ -104,19 +104,19 @@ export default function MyCollegePage() {
 
   return (
     <div
-      className="min-h-screen py-10"
+      className="min-h-screen py-6 sm:py-8 md:py-10"
       style={{
         background: `radial-gradient(1200px 600px at 10% 10%, rgba(99, 102, 241, 0.15), transparent), radial-gradient(1000px 600px at 90% 20%, rgba(6, 182, 212, 0.15), transparent), var(--background)`,
       }}
     >
-      <div className="container-responsive max-w-7xl mx-auto px-6">
+      <div className="container-responsive max-w-7xl mx-auto px-4 sm:px-6">
         {/* Page Header */}
         <PageHeader />
 
         {/* Main Content Grid */}
-        <div className="grid gap-8 lg:grid-cols-12">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-12">
           {/* Left Column - Main Content */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-6 sm:space-y-8">
             {/* Application Progress Card */}
             <ApplicationProgressCard
               applicationProgress={applicationProgress}
@@ -137,7 +137,7 @@ export default function MyCollegePage() {
           </div>
 
           {/* Right Column - Sidebar */}
-          <div className="lg:col-span-4 space-y-8">
+          <div className="lg:col-span-4 space-y-6 sm:space-y-8">
             {/* Applied College Card */}
             <AppliedCollegeCard college={college} />
 
