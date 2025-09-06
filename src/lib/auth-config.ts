@@ -7,8 +7,8 @@ import GoogleProvider from "next-auth/providers/google";
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
     }),
     GitHubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === "development",
   useSecureCookies: process.env.NODE_ENV === "production",
   callbacks: {
-    async signIn({ user, account, profile: _profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === "google" || account?.provider === "github") {
         try {
           // Connect to MongoDB
@@ -200,5 +200,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
 };
