@@ -514,31 +514,33 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
       {/* Header */}
-      <div className="container-responsive pt-6">
-        <div className="flex items-center gap-4 mb-8">
+      <div className="container-responsive pt-4 sm:pt-6 px-4 sm:px-6">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
           <button
             onClick={handleBack}
             className="flex items-center gap-2 text-white hover:text-purple-400 transition-colors group"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            Back
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm sm:text-base">Back</span>
           </button>
-          <div className="h-6 w-px bg-slate-600"></div>
-          <h1 className="text-3xl font-bold text-white">My Profile</h1>
+          <div className="h-4 sm:h-6 w-px bg-slate-600"></div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            My Profile
+          </h1>
         </div>
       </div>
 
-      <div className="container-responsive pb-16">
-        <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+      <div className="container-responsive pb-12 sm:pb-16 px-4 sm:px-6">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1fr_400px]">
           {/* Main Profile Content */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {/* Profile Header Card */}
             <FadeIn delay={0.1}>
-              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 border border-purple-500/30 shadow-2xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                   {/* Profile Image */}
-                  <div className="relative">
-                    <div className="w-32 h-32 rounded-2xl overflow-hidden border-4 border-purple-500/30 shadow-2xl">
+                  <div className="relative mx-auto sm:mx-0">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-purple-500/30 shadow-2xl">
                       {userProfile.avatar ? (
                         <Image
                           src={userProfile.avatar}
@@ -549,54 +551,54 @@ export default function ProfilePage() {
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
-                          <User className="w-16 h-16 text-white" />
+                          <User className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-white" />
                         </div>
                       )}
                     </div>
-                    <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-slate-900 flex items-center justify-center">
-                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                    <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full border-2 sm:border-4 border-slate-900 flex items-center justify-center">
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-white rounded-full"></div>
                     </div>
                   </div>
 
                   {/* Profile Info */}
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h2 className="text-3xl font-bold text-white mb-2">
+                  <div className="flex-1 w-full">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
+                      <div className="text-center sm:text-left">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                           {userProfile.name}
                         </h2>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Shield className="w-5 h-5 text-purple-400" />
-                          <span className="text-purple-400 font-medium">
+                        <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
+                          <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+                          <span className="text-purple-400 font-medium text-sm sm:text-base">
                             {userProfile.role}
                           </span>
                         </div>
                       </div>
                       <button
                         onClick={handleEditClick}
-                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        className="flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-sm sm:text-base"
                       >
                         <Edit3 className="w-4 h-4" />
                         Edit Profile
                       </button>
                     </div>
 
-                    <div className="grid gap-3 md:grid-cols-2">
+                    <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                       <div className="flex items-center gap-3">
-                        <Mail className="w-5 h-5 text-blue-400" />
-                        <span className="text-slate-200">
+                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
+                        <span className="text-slate-200 text-sm sm:text-base truncate">
                           {userProfile.email}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Calendar className="w-5 h-5 text-yellow-400" />
-                        <span className="text-slate-200">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0" />
+                        <span className="text-slate-200 text-sm sm:text-base">
                           Joined {userProfile.joinDate}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <Star className="w-5 h-5 text-yellow-400" />
-                        <span className="text-slate-200">
+                      <div className="flex items-center gap-3 sm:col-span-2">
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0" />
+                        <span className="text-slate-200 text-sm sm:text-base">
                           GPA: {userProfile.gpa}
                         </span>
                       </div>
@@ -608,53 +610,64 @@ export default function ProfilePage() {
 
             {/* University Information */}
             <FadeIn delay={0.2}>
-              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 shadow-2xl">
-                <div className="flex items-center justify-between mb-6">
+              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-2xl">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
                   <div className="flex items-center gap-3">
-                    <GraduationCap className="w-6 h-6 text-purple-400" />
-                    <h3 className="text-2xl font-bold text-white">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">
                       University Information
                     </h3>
                   </div>
                   <button
                     onClick={handleCollegeEditClick}
-                    className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-sm sm:text-base"
                   >
                     <Edit3 className="w-4 h-4" />
                     Edit
                   </button>
                 </div>
 
-                <div className="flex items-start gap-6">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-purple-500/30">
-                    <Image
-                      src={userProfile.universityLogo}
-                      alt={userProfile.university}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-xl font-semibold text-white mb-2">
+                <div className="space-y-6">
+                  {/* University Logo and Name - Centered on mobile */}
+                  <div className="text-center">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden border-2 border-purple-500/30 mx-auto mb-4">
+                      <Image
+                        src={userProfile.universityLogo}
+                        alt={userProfile.university}
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <h4 className="text-xl sm:text-2xl font-bold text-white mb-2">
                       {userProfile.university}
                     </h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300">Major:</span>
-                        <span className="text-white font-medium">
+                  </div>
+
+                  {/* Academic Information - Card-style layout for mobile */}
+                  <div className="bg-slate-800/30 rounded-xl p-4 sm:p-6 border border-slate-700/50">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between py-2 border-b border-slate-700/50">
+                        <span className="text-slate-300 text-sm sm:text-base font-medium">
+                          Major
+                        </span>
+                        <span className="text-white font-semibold text-sm sm:text-base text-right">
                           {userProfile.major}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300">Graduation Year:</span>
-                        <span className="text-white font-medium">
+                      <div className="flex items-center justify-between py-2 border-b border-slate-700/50">
+                        <span className="text-slate-300 text-sm sm:text-base font-medium">
+                          Graduation Year
+                        </span>
+                        <span className="text-white font-semibold text-sm sm:text-base">
                           {userProfile.graduationYear}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300">Current GPA:</span>
-                        <span className="text-white font-medium">
+                      <div className="flex items-center justify-between py-2">
+                        <span className="text-slate-300 text-sm sm:text-base font-medium">
+                          Current GPA
+                        </span>
+                        <span className="text-white font-semibold text-sm sm:text-base">
                           {userProfile.gpa}/4.0
                         </span>
                       </div>
@@ -666,11 +679,11 @@ export default function ProfilePage() {
 
             {/* Address Information */}
             <FadeIn delay={0.3}>
-              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 shadow-2xl">
-                <div className="flex items-center justify-between mb-6">
+              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-2xl">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-6 h-6 text-green-400" />
-                    <h3 className="text-2xl font-bold text-white">
+                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">
                       Address Information
                     </h3>
                   </div>
@@ -681,7 +694,7 @@ export default function ProfilePage() {
                   userProfile.address.country ? (
                     <button
                       onClick={handleAddressEditClick}
-                      className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      className="flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-sm sm:text-base"
                     >
                       <Edit3 className="w-4 h-4" />
                       Edit
@@ -697,55 +710,63 @@ export default function ProfilePage() {
                 userProfile.address.country ? (
                   <div className="space-y-3">
                     {userProfile.address.street && (
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300 w-20">Street:</span>
-                        <span className="text-white font-medium">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <span className="text-slate-300 text-sm sm:text-base w-16 sm:w-20">
+                          Street:
+                        </span>
+                        <span className="text-white font-medium text-sm sm:text-base">
                           {userProfile.address.street}
                         </span>
                       </div>
                     )}
                     {userProfile.address.city && (
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300 w-20">City:</span>
-                        <span className="text-white font-medium">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <span className="text-slate-300 text-sm sm:text-base w-16 sm:w-20">
+                          City:
+                        </span>
+                        <span className="text-white font-medium text-sm sm:text-base">
                           {userProfile.address.city}
                         </span>
                       </div>
                     )}
                     {userProfile.address.state && (
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300 w-20">State:</span>
-                        <span className="text-white font-medium">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <span className="text-slate-300 text-sm sm:text-base w-16 sm:w-20">
+                          State:
+                        </span>
+                        <span className="text-white font-medium text-sm sm:text-base">
                           {userProfile.address.state}
                         </span>
                       </div>
                     )}
                     {userProfile.address.zipCode && (
-                      <div className="flex items-center gap-3">
-                        <span className="text-slate-300 w-20">ZIP:</span>
-                        <span className="text-white font-medium">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <span className="text-slate-300 text-sm sm:text-base w-16 sm:w-20">
+                          ZIP:
+                        </span>
+                        <span className="text-white font-medium text-sm sm:text-base">
                           {userProfile.address.zipCode}
                         </span>
                       </div>
                     )}
                     {userProfile.address.country && (
-                      <div className="flex items-center gap-3">
-                        <Globe className="w-5 h-5 text-blue-400" />
-                        <span className="text-white font-medium">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 flex-shrink-0" />
+                        <span className="text-white font-medium text-sm sm:text-base">
                           {userProfile.address.country}
                         </span>
                       </div>
                     )}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <MapPin className="w-12 h-12 text-slate-500 mx-auto mb-4" />
-                    <p className="text-slate-400 mb-4">
+                  <div className="text-center py-6 sm:py-8">
+                    <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-slate-500 mx-auto mb-4" />
+                    <p className="text-slate-400 mb-4 text-sm sm:text-base">
                       No address information added yet
                     </p>
                     <button
                       onClick={handleAddressEditClick}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg mx-auto"
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg mx-auto text-sm sm:text-base"
                     >
                       <Edit3 className="w-4 h-4" />
                       Add Address
@@ -757,27 +778,29 @@ export default function ProfilePage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Profile Completeness */}
             <FadeIn delay={0.1}>
-              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-4">
+              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-2xl">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                   Profile Completeness
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-300">Overall Progress</span>
-                    <span className="text-white font-semibold">
+                    <span className="text-slate-300 text-sm sm:text-base">
+                      Overall Progress
+                    </span>
+                    <span className="text-white font-semibold text-sm sm:text-base">
                       {userProfile.profileCompleteness}%
                     </span>
                   </div>
-                  <div className="w-full bg-slate-700 rounded-full h-3">
+                  <div className="w-full bg-slate-700 rounded-full h-2 sm:h-3">
                     <div
-                      className="bg-gradient-to-r from-purple-600 to-blue-600 h-3 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-purple-600 to-blue-600 h-2 sm:h-3 rounded-full transition-all duration-500"
                       style={{ width: `${userProfile.profileCompleteness}%` }}
                     ></div>
                   </div>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-xs sm:text-sm text-slate-400">
                     Complete your profile to unlock more features
                   </p>
                 </div>
@@ -786,30 +809,34 @@ export default function ProfilePage() {
 
             {/* Application Stats */}
             <FadeIn delay={0.2}>
-              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-4">
+              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-2xl">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                   Application Statistics
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                        <GraduationCap className="w-5 h-5 text-blue-400" />
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                       </div>
-                      <span className="text-slate-300">Applications</span>
+                      <span className="text-slate-300 text-sm sm:text-base">
+                        Applications
+                      </span>
                     </div>
-                    <span className="text-white font-bold text-xl">
+                    <span className="text-white font-bold text-lg sm:text-xl">
                       {userProfile.applications}
                     </span>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                        <Star className="w-5 h-5 text-green-400" />
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                       </div>
-                      <span className="text-slate-300">Accepted</span>
+                      <span className="text-slate-300 text-sm sm:text-base">
+                        Accepted
+                      </span>
                     </div>
-                    <span className="text-white font-bold text-xl">
+                    <span className="text-white font-bold text-lg sm:text-xl">
                       {userProfile.acceptedColleges}
                     </span>
                   </div>
@@ -819,31 +846,37 @@ export default function ProfilePage() {
 
             {/* Quick Actions */}
             <FadeIn delay={0.3}>
-              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-4">
+              <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-2xl">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                   Quick Actions
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   <Link
                     href="/admission"
-                    className="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 rounded-lg transition-all duration-300 group"
+                    className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 rounded-lg transition-all duration-300 group"
                   >
-                    <GraduationCap className="w-5 h-5 text-purple-400 group-hover:scale-110 transition-transform" />
-                    <span className="text-white">New Application</span>
+                    <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 group-hover:scale-110 transition-transform" />
+                    <span className="text-white text-sm sm:text-base">
+                      New Application
+                    </span>
                   </Link>
                   <Link
                     href="/my-college"
-                    className="flex items-center gap-3 p-3 bg-gradient-to-r from-green-600/20 to-emerald-600/20 hover:from-green-600/30 hover:to-emerald-600/30 rounded-lg transition-all duration-300 group"
+                    className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-green-600/20 to-emerald-600/20 hover:from-green-600/30 hover:to-emerald-600/30 rounded-lg transition-all duration-300 group"
                   >
-                    <Star className="w-5 h-5 text-green-400 group-hover:scale-110 transition-transform" />
-                    <span className="text-white">My Applications</span>
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 group-hover:scale-110 transition-transform" />
+                    <span className="text-white text-sm sm:text-base">
+                      My Applications
+                    </span>
                   </Link>
                   <Link
                     href="/colleges"
-                    className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 hover:from-blue-600/30 hover:to-cyan-600/30 rounded-lg transition-all duration-300 group"
+                    className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 hover:from-blue-600/30 hover:to-cyan-600/30 rounded-lg transition-all duration-300 group"
                   >
-                    <Globe className="w-5 h-5 text-blue-400 group-hover:scale-110 transition-transform" />
-                    <span className="text-white">Browse Colleges</span>
+                    <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 group-hover:scale-110 transition-transform" />
+                    <span className="text-white text-sm sm:text-base">
+                      Browse Colleges
+                    </span>
                   </Link>
                 </div>
               </div>
@@ -856,14 +889,16 @@ export default function ProfilePage() {
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">Edit Profile</h2>
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  Edit Profile
+                </h2>
                 <button
                   onClick={handleCloseModal}
                   className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </button>
               </div>
 
@@ -881,7 +916,7 @@ export default function ProfilePage() {
                   </div>
                 )}
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   <div>
                     <label className="block text-blue-200 text-sm font-medium mb-2">
                       Full Name <span className="text-red-400">*</span>
@@ -891,7 +926,7 @@ export default function ProfilePage() {
                       name="name"
                       value={editForm.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your full name"
                       disabled={isUpdating}
                     />
@@ -906,18 +941,18 @@ export default function ProfilePage() {
                       name="email"
                       value={editForm.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your email address"
                       disabled={isUpdating}
                     />
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                   <button
                     type="button"
                     onClick={handleCloseModal}
-                    className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors"
+                    className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
                     disabled={isUpdating}
                   >
                     Cancel
@@ -925,7 +960,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={isUpdating}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm sm:text-base"
                   >
                     {isUpdating ? "Saving Changes..." : "Save Changes"}
                   </button>
@@ -940,14 +975,16 @@ export default function ProfilePage() {
       {isAddressModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">Edit Address</h2>
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  Edit Address
+                </h2>
                 <button
                   onClick={handleAddressCloseModal}
                   className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </button>
               </div>
 
@@ -965,7 +1002,7 @@ export default function ProfilePage() {
                   </div>
                 )}
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   <div>
                     <label className="block text-blue-200 text-sm font-medium mb-2">
                       Street Address
@@ -975,7 +1012,7 @@ export default function ProfilePage() {
                       name="street"
                       value={addressForm.street}
                       onChange={handleAddressInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your street address"
                       disabled={isUpdating}
                     />
@@ -990,7 +1027,7 @@ export default function ProfilePage() {
                       name="city"
                       value={addressForm.city}
                       onChange={handleAddressInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your city"
                       disabled={isUpdating}
                     />
@@ -1005,7 +1042,7 @@ export default function ProfilePage() {
                       name="state"
                       value={addressForm.state}
                       onChange={handleAddressInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your state or province"
                       disabled={isUpdating}
                     />
@@ -1020,7 +1057,7 @@ export default function ProfilePage() {
                       name="zipCode"
                       value={addressForm.zipCode}
                       onChange={handleAddressInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your ZIP or postal code"
                       disabled={isUpdating}
                     />
@@ -1036,17 +1073,17 @@ export default function ProfilePage() {
                     name="country"
                     value={addressForm.country}
                     onChange={handleAddressInputChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                    className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                     placeholder="Enter your country"
                     disabled={isUpdating}
                   />
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                   <button
                     type="button"
                     onClick={handleAddressCloseModal}
-                    className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors"
+                    className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
                     disabled={isUpdating}
                   >
                     Cancel
@@ -1054,7 +1091,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={isUpdating}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm sm:text-base"
                   >
                     {isUpdating ? "Saving Changes..." : "Save Address"}
                   </button>
@@ -1069,16 +1106,16 @@ export default function ProfilePage() {
       {isCollegeModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
                   Edit College Information
                 </h2>
                 <button
                   onClick={handleCollegeCloseModal}
                   className="p-2 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-white" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </button>
               </div>
 
@@ -1096,7 +1133,7 @@ export default function ProfilePage() {
                   </div>
                 )}
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   <div>
                     <label className="block text-blue-200 text-sm font-medium mb-2">
                       University Name <span className="text-red-400">*</span>
@@ -1106,7 +1143,7 @@ export default function ProfilePage() {
                         name="university"
                         value={collegeForm.university}
                         onChange={handleCollegeInputChange}
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none appearance-none text-white placeholder-blue-200"
+                        className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none appearance-none text-white placeholder-blue-200 text-sm sm:text-base"
                         disabled={isUpdating || isLoadingColleges}
                       >
                         <option value="">
@@ -1121,7 +1158,7 @@ export default function ProfilePage() {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-300 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-blue-300 pointer-events-none" />
                     </div>
                   </div>
 
@@ -1135,7 +1172,7 @@ export default function ProfilePage() {
                       name="major"
                       value={collegeForm.major}
                       onChange={handleCollegeInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your major or field of study"
                       disabled={isUpdating}
                     />
@@ -1150,7 +1187,7 @@ export default function ProfilePage() {
                       name="graduationYear"
                       value={collegeForm.graduationYear}
                       onChange={handleCollegeInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your graduation year"
                       min={new Date().getFullYear()}
                       max={new Date().getFullYear() + 10}
@@ -1167,7 +1204,7 @@ export default function ProfilePage() {
                       name="gpa"
                       value={collegeForm.gpa}
                       onChange={handleCollegeInputChange}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200"
+                      className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 text-sm sm:text-base"
                       placeholder="Enter your GPA (0.0 - 4.0)"
                       min="0"
                       max="4"
@@ -1177,11 +1214,11 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                   <button
                     type="button"
                     onClick={handleCollegeCloseModal}
-                    className="flex-1 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors"
+                    className="flex-1 px-4 py-2 sm:px-6 sm:py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
                     disabled={isUpdating}
                   >
                     Cancel
@@ -1189,7 +1226,7 @@ export default function ProfilePage() {
                   <button
                     type="submit"
                     disabled={isUpdating}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm sm:text-base"
                   >
                     {isUpdating ? "Saving Changes..." : "Save Changes"}
                   </button>
