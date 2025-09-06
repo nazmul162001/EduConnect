@@ -12,6 +12,11 @@ interface RegisterRequest {
   password: string;
 }
 
+interface UpdateProfileRequest {
+  name: string;
+  email: string;
+}
+
 interface AuthResponse {
   message: string;
   user: User;
@@ -67,6 +72,31 @@ export const authApi = createApi({
       query: () => "/me",
       providesTags: ["User"],
     }),
+    updateProfile: builder.mutation<AuthResponse, UpdateProfileRequest>({
+      query: (profileData) => ({
+        url: "/update-profile",
+        method: "PUT",
+        body: profileData,
+      }),
+      invalidatesTags: ["User"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          // Update the auth state with the new user data
+          dispatch(
+            authApi.util.updateQueryData(
+              "getCurrentUser",
+              undefined,
+              (draft) => {
+                draft.user = data.user;
+              }
+            )
+          );
+        } catch (error) {
+          console.error("Profile update failed:", error);
+        }
+      },
+    }),
   }),
 });
 
@@ -75,4 +105,5 @@ export const {
   useRegisterMutation,
   useLogoutMutation,
   useGetCurrentUserQuery,
+  useUpdateProfileMutation,
 } = authApi;
