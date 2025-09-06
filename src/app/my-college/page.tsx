@@ -6,8 +6,33 @@ import {
   useUpdateAdmissionMutation,
 } from "@/redux/features/admission/admissionApi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Edit, Mail, MapPin, Phone, Star, X } from "lucide-react";
-import { useState } from "react";
+import {
+  Award,
+  BarChart3,
+  BookOpen,
+  Calendar,
+  CheckCircle,
+  Clock,
+  Download,
+  Edit,
+  Eye,
+  FileText,
+  GraduationCap,
+  Heart,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Share2,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+  X,
+  Zap,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { z } from "zod";
@@ -32,10 +57,32 @@ export default function MyCollegePage() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Get the most recent admission application
   const application = admissionsData?.admissions?.[0];
   const college = application?.college;
+
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Calculate application progress
+  const getApplicationProgress = () => {
+    if (!application) return 0;
+    const daysSinceApplication = Math.floor(
+      (currentTime.getTime() -
+        new Date(application.applicationDate).getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+    return Math.min(daysSinceApplication * 2, 100); // 2% per day, max 100%
+  };
+
+  const applicationProgress = getApplicationProgress();
 
   const {
     register,
@@ -111,16 +158,95 @@ export default function MyCollegePage() {
           background: `radial-gradient(1200px 600px at 10% 10%, rgba(99, 102, 241, 0.15), transparent), radial-gradient(1000px 600px at 90% 20%, rgba(6, 182, 212, 0.15), transparent), var(--background)`,
         }}
       >
-        <div className="container-responsive max-w-6xl mx-auto px-6">
-          <div className="animate-pulse">
-            <div className="h-8 bg-white/20 rounded w-64 mb-2"></div>
-            <div className="h-4 bg-white/10 rounded w-96 mb-8"></div>
-            <div className="grid gap-6 lg:grid-cols-3">
-              <div className="lg:col-span-2 space-y-6">
-                <div className="h-64 bg-white/10 rounded-2xl"></div>
-                <div className="h-64 bg-white/10 rounded-2xl"></div>
+        <div className="container-responsive max-w-7xl mx-auto px-6">
+          {/* Enhanced Loading Header */}
+          <div className="text-center mb-12">
+            <div className="animate-pulse">
+              <div className="h-12 bg-gradient-to-r from-blue-400/30 to-purple-400/30 rounded-lg w-80 mx-auto mb-4"></div>
+              <div className="h-6 bg-white/20 rounded w-96 mx-auto mb-8"></div>
+            </div>
+            <div className="flex justify-center items-center space-x-2">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+              <span className="text-blue-200 text-lg">
+                Loading your application dashboard...
+              </span>
+            </div>
+          </div>
+
+          {/* Enhanced Loading Grid */}
+          <div className="grid gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-8 space-y-8">
+              {/* Application Details Skeleton */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="animate-pulse">
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="h-8 bg-white/20 rounded w-48"></div>
+                    <div className="h-10 bg-white/20 rounded-lg w-20"></div>
+                  </div>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className="space-y-2">
+                        <div className="h-4 bg-white/10 rounded w-24"></div>
+                        <div className="h-6 bg-white/20 rounded w-full"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="h-96 bg-white/10 rounded-2xl"></div>
+
+              {/* Experience Card Skeleton */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-white/20 rounded w-56 mb-8"></div>
+                  <div className="space-y-6">
+                    <div className="h-6 bg-white/10 rounded w-32"></div>
+                    <div className="flex space-x-2">
+                      {[...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-8 w-8 bg-white/20 rounded"
+                        ></div>
+                      ))}
+                    </div>
+                    <div className="h-32 bg-white/10 rounded-lg"></div>
+                    <div className="h-12 bg-white/20 rounded-lg"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-4 space-y-8">
+              {/* College Card Skeleton */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-white/20 rounded w-40 mb-6"></div>
+                  <div className="text-center space-y-4">
+                    <div className="h-6 bg-white/20 rounded w-32 mx-auto"></div>
+                    <div className="h-12 bg-white/20 rounded-lg"></div>
+                    <div className="h-4 bg-white/10 rounded w-24 mx-auto"></div>
+                    <div className="h-6 bg-white/20 rounded w-28 mx-auto"></div>
+                    <div className="h-16 bg-white/10 rounded-lg"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Card Skeleton */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-white/20 rounded w-32 mb-6"></div>
+                  <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="h-4 bg-white/10 rounded w-20"></div>
+                        <div className="h-6 bg-white/20 rounded w-16"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -136,31 +262,94 @@ export default function MyCollegePage() {
           background: `radial-gradient(1200px 600px at 10% 10%, rgba(99, 102, 241, 0.15), transparent), radial-gradient(1000px 600px at 90% 20%, rgba(6, 182, 212, 0.15), transparent), var(--background)`,
         }}
       >
-        <div className="container-responsive max-w-6xl mx-auto px-6">
+        <div className="container-responsive max-w-7xl mx-auto px-6">
+          {/* Enhanced Header */}
           <FadeIn>
-            <h1 className="text-4xl font-bold text-white mb-2">
-              My College Application
-            </h1>
-            <p className="text-xl text-blue-100 mb-8">
-              Manage your application details and share your experience
-            </p>
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full mb-6">
+                <GraduationCap className="w-10 h-10 text-blue-400" />
+              </div>
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-4">
+                My College Application
+              </h1>
+              <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                Your gateway to higher education. Track applications, manage
+                documents, and stay connected with your academic journey.
+              </p>
+            </div>
           </FadeIn>
 
+          {/* Enhanced No Application State */}
           <SlideUp>
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">
-                No Application Found
-              </h2>
-              <p className="text-blue-100 mb-6">
-                You haven't submitted any college applications yet. Start your
-                journey by applying to a college.
-              </p>
-              <a
-                href="/admission"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              >
-                Start Application
-              </a>
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-12 text-center relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5">
+                  <div className="absolute top-10 left-10 w-32 h-32 bg-blue-400 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-10 right-10 w-40 h-40 bg-purple-400 rounded-full blur-3xl"></div>
+                </div>
+
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full mb-8">
+                    <FileText className="w-12 h-12 text-blue-400" />
+                  </div>
+
+                  <h2 className="text-3xl font-bold text-white mb-6">
+                    Ready to Begin Your Journey?
+                  </h2>
+
+                  <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+                    You haven't submitted any college applications yet. Take the
+                    first step towards your dream education by applying to your
+                    preferred college.
+                  </p>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <Link
+                      href="/admission"
+                      className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                    >
+                      <Zap className="w-5 h-5 group-hover:animate-pulse" />
+                      Start Application
+                    </Link>
+
+                    <Link
+                      href="/colleges"
+                      className="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl border border-white/20 hover:border-white/30 transition-all duration-300"
+                    >
+                      <Eye className="w-5 h-5" />
+                      Browse Colleges
+                    </Link>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white mb-2">
+                        15+
+                      </div>
+                      <div className="text-blue-200 text-sm">
+                        Colleges Available
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white mb-2">
+                        95%
+                      </div>
+                      <div className="text-blue-200 text-sm">Success Rate</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white mb-2">
+                        24/7
+                      </div>
+                      <div className="text-blue-200 text-sm">
+                        Support Available
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </SlideUp>
         </div>
@@ -188,82 +377,188 @@ export default function MyCollegePage() {
         background: `radial-gradient(1200px 600px at 10% 10%, rgba(99, 102, 241, 0.15), transparent), radial-gradient(1000px 600px at 90% 20%, rgba(6, 182, 212, 0.15), transparent), var(--background)`,
       }}
     >
-      <div className="container-responsive max-w-6xl mx-auto px-6">
-        {/* Header */}
+      <div className="container-responsive max-w-7xl mx-auto px-6">
+        {/* Enhanced Header */}
         <FadeIn>
-          <h1 className="text-4xl font-bold text-white mb-2">
-            My College Application
-          </h1>
-          <p className="text-xl text-blue-100 mb-8">
-            Manage your application details and share your experience
-          </p>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-600/20 rounded-full mb-6">
+              <GraduationCap className="w-10 h-10 text-blue-400" />
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-4">
+              My College Application
+            </h1>
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+              Track your application progress, manage your academic journey, and
+              stay connected with your chosen institution.
+            </p>
+          </div>
         </FadeIn>
 
         {/* Main Content Grid */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Left Column - Two Cards */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid gap-8 lg:grid-cols-12">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Application Progress Card */}
+            <SlideUp>
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8 relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-2xl"></div>
+
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                        <BarChart3 className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-white">
+                          Application Progress
+                        </h2>
+                        <p className="text-blue-200">
+                          Track your admission journey
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-3xl font-bold text-white">
+                        {applicationProgress}%
+                      </div>
+                      <div className="text-blue-200 text-sm">Complete</div>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="mb-6">
+                    <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-1000 ease-out"
+                        style={{ width: `${applicationProgress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Progress Steps */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <CheckCircle className="w-6 h-6 text-green-400" />
+                      <div>
+                        <div className="text-white font-semibold">
+                          Submitted
+                        </div>
+                        <div className="text-blue-200 text-sm">
+                          Application sent
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Clock className="w-6 h-6 text-yellow-400" />
+                      <div>
+                        <div className="text-white font-semibold">
+                          Under Review
+                        </div>
+                        <div className="text-blue-200 text-sm">
+                          Committee reviewing
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Target className="w-6 h-6 text-blue-400" />
+                      <div>
+                        <div className="text-white font-semibold">Decision</div>
+                        <div className="text-blue-200 text-sm">
+                          Awaiting result
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Award className="w-6 h-6 text-purple-400" />
+                      <div>
+                        <div className="text-white font-semibold">
+                          Enrollment
+                        </div>
+                        <div className="text-blue-200 text-sm">Next step</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SlideUp>
+
             {/* Application Details Card */}
             <SlideUp>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">
-                    Application Details
-                  </h2>
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">
+                        Application Details
+                      </h2>
+                      <p className="text-blue-200">Your personal information</p>
+                    </div>
+                  </div>
                   <button
                     onClick={openEditModal}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                    className="group flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all duration-300 hover:scale-105"
                   >
-                    <Edit className="w-4 h-4" />
-                    Edit
+                    <Edit className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                    Edit Details
                   </button>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
                       Full Name
                     </label>
-                    <p className="text-white font-semibold">
-                      {application.studentName}
-                    </p>
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Users className="w-5 h-5 text-blue-400" />
+                      <p className="text-white font-semibold">
+                        {application.studentName}
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
+                  <div className="space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
                       Preferred Subject
                     </label>
-                    <p className="text-white font-semibold">
-                      {application.course}
-                    </p>
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <BookOpen className="w-5 h-5 text-green-400" />
+                      <p className="text-white font-semibold">
+                        {application.course}
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
-                      Email
+                  <div className="space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
+                      Email Address
                     </label>
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-blue-300" />
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Mail className="w-5 h-5 text-blue-400" />
                       <p className="text-white">{application.email}</p>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
-                      Phone
+                  <div className="space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
+                      Phone Number
                     </label>
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-blue-300" />
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Phone className="w-5 h-5 text-green-400" />
                       <p className="text-white">{application.phone}</p>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
+                  <div className="space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
                       Date of Birth
                     </label>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-blue-300" />
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Calendar className="w-5 h-5 text-purple-400" />
                       <p className="text-white">
                         {new Date(
                           application.dateOfBirth || ""
@@ -272,12 +567,12 @@ export default function MyCollegePage() {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
+                  <div className="space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
                       Application Date
                     </label>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-blue-300" />
+                    <div className="flex items-center gap-3 p-4 bg-white/5 rounded-xl">
+                      <Calendar className="w-5 h-5 text-blue-400" />
                       <p className="text-white">
                         {new Date(
                           application.applicationDate
@@ -286,12 +581,12 @@ export default function MyCollegePage() {
                     </div>
                   </div>
 
-                  <div className="md:col-span-2">
-                    <label className="block text-blue-200 text-sm font-medium mb-1">
-                      Address
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="block text-blue-200 text-sm font-medium">
+                      Complete Address
                     </label>
-                    <div className="flex items-start gap-2">
-                      <MapPin className="w-4 h-4 text-blue-300 mt-0.5" />
+                    <div className="flex items-start gap-3 p-4 bg-white/5 rounded-xl">
+                      <MapPin className="w-5 h-5 text-red-400 mt-0.5" />
                       <p className="text-white">{application.address}</p>
                     </div>
                   </div>
@@ -301,51 +596,75 @@ export default function MyCollegePage() {
 
             {/* Share Your Experience Card */}
             <SlideUp>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-6">
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Share Your Experience
-                </h2>
-
-                <div className="space-y-6">
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
+                    <MessageCircle className="w-6 h-6 text-white" />
+                  </div>
                   <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-3">
-                      Rate your experience
+                    <h2 className="text-2xl font-bold text-white">
+                      Share Your Experience
+                    </h2>
+                    <p className="text-blue-200">
+                      Help other students with your insights
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-blue-200 text-sm font-medium mb-4">
+                      Rate your application experience
                     </label>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
                           key={star}
                           onClick={() => setRating(star)}
-                          className="transition-colors"
+                          className="group transition-all duration-300 hover:scale-110"
                         >
                           <Star
-                            className={`w-8 h-8 ${
+                            className={`w-10 h-10 transition-all duration-300 ${
                               star <= rating
-                                ? "text-yellow-400 fill-current"
-                                : "text-gray-400 hover:text-yellow-300"
+                                ? "text-yellow-400 fill-current drop-shadow-lg"
+                                : "text-gray-400 hover:text-yellow-300 group-hover:scale-110"
                             }`}
                           />
                         </button>
                       ))}
                     </div>
+                    {rating > 0 && (
+                      <p className="text-blue-200 text-sm mt-2">
+                        {rating === 5
+                          ? "Excellent!"
+                          : rating === 4
+                          ? "Great!"
+                          : rating === 3
+                          ? "Good!"
+                          : rating === 2
+                          ? "Fair"
+                          : "Poor"}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-blue-200 text-sm font-medium mb-3">
-                      Your review
+                    <label className="block text-blue-200 text-sm font-medium mb-4">
+                      Share your thoughts
                     </label>
                     <textarea
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      placeholder="Share your thoughts about the college and application process..."
-                      className="w-full h-32 px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 resize-none"
+                      placeholder="Tell us about your experience with the application process, what you liked, what could be improved, or any tips for future applicants..."
+                      className="w-full h-40 px-6 py-4 bg-white/5 border border-white/10 rounded-xl focus:border-blue-400 focus:outline-none text-white placeholder-blue-200 resize-none transition-all duration-300 focus:bg-white/10"
                     />
                   </div>
 
                   <button
                     onClick={handleSubmitReview}
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    className="group w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
                   >
+                    <Heart className="w-5 h-5 group-hover:animate-pulse" />
                     Submit Review
                   </button>
                 </div>
@@ -353,36 +672,133 @@ export default function MyCollegePage() {
             </SlideUp>
           </div>
 
-          {/* Right Column - Applied College Card */}
-          <div>
+          {/* Right Column - Sidebar */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Applied College Card */}
             <SlideUp>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl p-6">
-                <h2 className="text-2xl font-bold text-white mb-4">
-                  Applied College
-                </h2>
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white">
+                      Applied College
+                    </h2>
+                    <p className="text-blue-200 text-sm">
+                      Your chosen institution
+                    </p>
+                  </div>
+                </div>
 
                 <div className="text-center">
-                  <h3 className="text-xl font-bold text-white mb-4">
+                  <h3 className="text-2xl font-bold text-white mb-6">
                     {college.name}
                   </h3>
 
                   <div className="mb-6">
-                    <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-colors">
+                    <button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transition-all duration-300 flex items-center justify-center gap-3">
+                      <CheckCircle className="w-5 h-5" />
                       Application Submitted
                     </button>
                   </div>
 
-                  <div className="text-center">
-                    <p className="text-blue-200 text-sm mb-1">
-                      Application Status
-                    </p>
-                    <p className="text-white font-bold text-lg">Under Review</p>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-white/5 rounded-xl">
+                      <p className="text-blue-200 text-sm mb-2">
+                        Application Status
+                      </p>
+                      <div className="flex items-center justify-center gap-2">
+                        <Clock className="w-5 h-5 text-yellow-400" />
+                        <p className="text-white font-bold text-lg">
+                          Under Review
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-white/5 rounded-xl">
+                      <p className="text-blue-200 text-sm mb-2">
+                        Expected Response
+                      </p>
+                      <p className="text-white font-semibold">2-4 weeks</p>
+                    </div>
                   </div>
 
-                  <p className="text-blue-100 text-sm mt-4 leading-relaxed">
-                    Your application is being reviewed by the admissions
-                    committee. You will receive an update within 2-4 weeks.
+                  <p className="text-blue-100 text-sm mt-6 leading-relaxed">
+                    Your application is being carefully reviewed by our
+                    admissions committee. We'll notify you as soon as a decision
+                    is made.
                   </p>
+
+                  <div className="mt-6 flex gap-3">
+                    <button className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
+                      <Download className="w-4 h-4" />
+                      Download
+                    </button>
+                    <button className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2">
+                      <Share2 className="w-4 h-4" />
+                      Share
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </SlideUp>
+
+            {/* Quick Stats Card */}
+            <SlideUp>
+              <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white">
+                      Quick Stats
+                    </h2>
+                    <p className="text-blue-200 text-sm">
+                      Your application metrics
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <Calendar className="w-4 h-4 text-blue-400" />
+                      </div>
+                      <span className="text-blue-200">Days Applied</span>
+                    </div>
+                    <span className="text-white font-bold">
+                      {Math.floor(
+                        (currentTime.getTime() -
+                          new Date(application.applicationDate).getTime()) /
+                          (1000 * 60 * 60 * 24)
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <Target className="w-4 h-4 text-green-400" />
+                      </div>
+                      <span className="text-blue-200">Progress</span>
+                    </div>
+                    <span className="text-white font-bold">
+                      {applicationProgress}%
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                        <Award className="w-4 h-4 text-purple-400" />
+                      </div>
+                      <span className="text-blue-200">Status</span>
+                    </div>
+                    <span className="text-white font-bold">Active</span>
+                  </div>
                 </div>
               </div>
             </SlideUp>
