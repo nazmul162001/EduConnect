@@ -13,6 +13,11 @@ export function LoadingWrapper({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  // Only show loading spinner on the home route (/)
+  if (pathname !== "/") {
+    return <>{children}</>;
+  }
+
   return (
     <>
       <AnimatePresence>
