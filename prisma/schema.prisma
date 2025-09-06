@@ -93,6 +93,7 @@ model Review {
   collegeId String @db.ObjectId
   college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
 }
+// 
 
 enum Role {
   STUDENT
