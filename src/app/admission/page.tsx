@@ -89,18 +89,25 @@ function InnerAdmission() {
         address: values.address,
       }).unwrap();
 
-      // Show success message
-      await Swal.fire({
+      // Show success message with See Application button
+      const alertResult = await Swal.fire({
         title: "Application Submitted!",
         text: "Your college admission application has been submitted successfully.",
         icon: "success",
-        confirmButtonText: "OK",
+        showCancelButton: true,
+        confirmButtonText: "See Application",
+        cancelButtonText: "OK",
         confirmButtonColor: "#3b82f6",
+        cancelButtonColor: "#6b7280",
       });
 
-      // Reset form and redirect
+      // Reset form
       reset();
-      router.push("/my-college");
+
+      // Redirect based on user choice
+      if (alertResult.isConfirmed) {
+        router.push("/my-college");
+      }
     } catch (error: any) {
       console.error("Error submitting application:", error);
 

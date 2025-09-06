@@ -5,6 +5,17 @@ import {
   GetAdmissionsResponse,
 } from "./admissionSlice";
 
+export interface UpdateAdmissionRequest {
+  admissionId: string;
+  studentName: string;
+  course: string;
+  email: string;
+  phone: string;
+  dateOfBirth?: string;
+  profileImage?: string;
+  address?: string;
+}
+
 export const admissionApi = createApi({
   reducerPath: "admissionApi",
   baseQuery: fetchBaseQuery({
@@ -40,6 +51,39 @@ export const admissionApi = createApi({
         }
       },
     }),
+    updateAdmission: builder.mutation<
+      AdmissionResponse,
+      UpdateAdmissionRequest
+    >({
+      query: (admissionData) => ({
+        url: "/",
+        method: "PUT",
+        body: admissionData,
+      }),
+      invalidatesTags: ["Admission"],
+      async onQueryStarted({ admissionId }, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          // Optimistically update the cache
+          dispatch(
+            admissionApi.util.updateQueryData(
+              "getAdmissions",
+              undefined,
+              (draft) => {
+                const admission = draft.admissions.find(
+                  (a) => a.id === admissionId
+                );
+                if (admission) {
+                  Object.assign(admission, data.admission);
+                }
+              }
+            )
+          );
+        } catch {
+          // If the update fails, the cache will be invalidated and refetched
+        }
+      },
+    }),
     getAdmissions: builder.query<GetAdmissionsResponse, void>({
       query: () => "/",
       providesTags: ["Admission"],
@@ -47,5 +91,8 @@ export const admissionApi = createApi({
   }),
 });
 
-export const { useCreateAdmissionMutation, useGetAdmissionsQuery } =
-  admissionApi;
+export const {
+  useCreateAdmissionMutation,
+  useUpdateAdmissionMutation,
+  useGetAdmissionsQuery,
+} = admissionApi;
