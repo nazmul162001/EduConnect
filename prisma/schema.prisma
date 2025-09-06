@@ -80,6 +80,10 @@ model Review {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   rating    Int
   comment   String
+  userName  String   // User's display name for the review
+  firstName String?  // User's first name
+  lastName  String?  // User's last name
+  university String? // University the user is reviewing about
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

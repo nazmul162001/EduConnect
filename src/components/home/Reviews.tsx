@@ -4,6 +4,19 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
+interface ReviewData {
+  _id: string;
+  collegeId: string;
+  userId: string;
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  rating: number;
+  comment: string;
+  university?: string;
+  createdAt: string;
+}
+
 export function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -22,7 +35,21 @@ export function Reviews() {
         const response = await fetch("/api/reviews");
         const data = await response.json();
         if (data.success) {
-          setReviews(data.data);
+          // Transform the data to match the expected format
+          const transformedReviews = data.data.map((review: ReviewData) => ({
+            _id: review._id,
+            id: review._id,
+            collegeId: review.collegeId,
+            userId: review.userId,
+            userName: review.userName,
+            firstName: review.firstName,
+            lastName: review.lastName,
+            rating: review.rating,
+            comment: review.comment,
+            university: review.university,
+            createdAt: review.createdAt,
+          }));
+          setReviews(transformedReviews);
         } else {
           setError("Failed to fetch reviews");
         }

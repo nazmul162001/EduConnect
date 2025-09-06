@@ -4,6 +4,10 @@ export interface Review {
   id: string;
   rating: number;
   comment: string;
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  university?: string;
   createdAt: string;
   updatedAt: string;
   userId: string;
@@ -14,6 +18,10 @@ interface CreateReviewRequest {
   rating: number;
   comment: string;
   collegeId: string;
+  userName: string;
+  firstName?: string;
+  lastName?: string;
+  university?: string;
 }
 
 interface ReviewResponse {

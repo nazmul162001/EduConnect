@@ -1,23 +1,121 @@
 "use client";
 import { SlideUp } from "@/components/motion/MotionPrimitives";
+import { useAuth } from "@/hooks/useAuth";
+import { College } from "@/redux/features/admission/admissionSlice";
+import { useGetCurrentUserQuery } from "@/redux/features/auth/authApi";
+import { useCreateReviewMutation } from "@/redux/features/review/reviewApi";
 import { Heart, MessageCircle, Star } from "lucide-react";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
-export default function ExperienceReviewCard() {
+interface ExperienceReviewCardProps {
+  collegeId: string;
+  collegeName?: string;
+  collegeData?: College;
+}
+
+export default function ExperienceReviewCard({
+  collegeId,
+  collegeName,
+  collegeData,
+}: ExperienceReviewCardProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmitReview = () => {
+  const { user } = useAuth();
+  const [createReview] = useCreateReviewMutation();
+  const { refetch: refetchUser } = useGetCurrentUserQuery();
+
+  const handleSubmitReview = async () => {
     if (rating === 0 || !comment.trim()) {
-      alert("Please provide both a rating and a review comment.");
+      Swal.fire({
+        title: "Missing Information",
+        text: "Please provide both a rating and a review comment.",
+        icon: "warning",
+        confirmButtonColor: "#3b82f6",
+      });
       return;
     }
 
-    // TODO: Implement review submission
-    console.log("Review submitted:", { rating, comment });
-    setRating(0);
-    setComment("");
-    alert("Review submitted successfully!");
+    if (!user) {
+      Swal.fire({
+        title: "Authentication Required",
+        text: "Please log in to submit a review.",
+        icon: "error",
+        confirmButtonColor: "#3b82f6",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Refresh user data to get the latest university information
+      const { data: freshUserData } = await refetchUser();
+      const currentUser = freshUserData?.user || user;
+
+      const userName = currentUser.name || "Anonymous User";
+      // Handle multiple universities - take the first one if comma-separated
+      // If user's university is empty, use the college name as fallback
+      let university = currentUser.university
+        ? currentUser.university.split(",")[0].trim()
+        : "";
+
+      // Fallback: if university is still empty, use the college name
+      if (!university) {
+        if (collegeName) {
+          university = collegeName;
+        } else if (collegeData?.name) {
+          university = collegeData.name;
+        }
+      }
+
+      console.log("=== Review Submission Debug ===");
+      console.log("Original user object:", user);
+      console.log("Fresh user data:", currentUser);
+      console.log("University field:", currentUser.university);
+      console.log("College name:", collegeName);
+      console.log("College data:", collegeData);
+      console.log("Processed university:", university);
+
+      const reviewData = {
+        rating,
+        comment: comment.trim(),
+        collegeId,
+        userName,
+        firstName: userName.split(" ")[0],
+        lastName: userName.split(" ").slice(1).join(" "),
+        university,
+      };
+
+      await createReview(reviewData).unwrap();
+
+      Swal.fire({
+        title: "Review Submitted!",
+        text: "Thank you for sharing your experience. Your review helps other students make informed decisions.",
+        icon: "success",
+        confirmButtonColor: "#10b981",
+      });
+
+      // Reset form
+      setRating(0);
+      setComment("");
+    } catch (error: unknown) {
+      console.error("Error submitting review:", error);
+      const errorMessage =
+        (error as { data?: { error?: string } })?.data?.error ||
+        "Failed to submit review. Please try again.";
+
+      Swal.fire({
+        title: "Submission Failed",
+        text: errorMessage,
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -88,10 +186,20 @@ export default function ExperienceReviewCard() {
 
           <button
             onClick={handleSubmitReview}
-            className="group w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+            disabled={isSubmitting}
+            className="group w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 disabled:hover:scale-100 transition-all duration-300 flex items-center justify-center gap-3"
           >
-            <Heart className="w-5 h-5 group-hover:animate-pulse" />
-            Submit Review
+            {isSubmitting ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                Submitting...
+              </>
+            ) : (
+              <>
+                <Heart className="w-5 h-5 group-hover:animate-pulse" />
+                Submit Review
+              </>
+            )}
           </button>
         </div>
       </div>

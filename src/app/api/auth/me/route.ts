@@ -58,6 +58,11 @@ export async function GET() {
       state: user.state || "",
       zipCode: user.zipCode || "",
       country: user.country || "",
+      // College fields
+      university: user.university || "",
+      major: user.major || "",
+      graduationYear: user.graduationYear || "",
+      gpa: user.gpa || "",
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

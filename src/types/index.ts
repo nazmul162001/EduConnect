@@ -54,6 +54,7 @@ export type Review = {
   comment: string;
   university?: string;
   createdAt: string;
+  updatedAt?: string;
 };
 
 export type UserProfile = {

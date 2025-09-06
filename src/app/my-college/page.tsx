@@ -129,7 +129,11 @@ export default function MyCollegePage() {
             />
 
             {/* Share Your Experience Card */}
-            <ExperienceReviewCard />
+            <ExperienceReviewCard
+              collegeId={college.id}
+              collegeName={college.name}
+              collegeData={college}
+            />
           </div>
 
           {/* Right Column - Sidebar */}
